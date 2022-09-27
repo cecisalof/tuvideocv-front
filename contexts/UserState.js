@@ -1,4 +1,5 @@
 import React from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Context from './context';
 
 export default class UserState extends React.Component{
@@ -16,8 +17,30 @@ export default class UserState extends React.Component{
       this.setState({userData: newUserData});
   };
 
-  updateToken = (newToken) => {
-      this.setState({token: newToken});
+  updateToken = (newToken, saveToMemory = false) => {
+    this.setState({token: newToken}, () =>{
+      if(saveToMemory) this.saveToMemory()
+    });
+  };
+
+  readFromMemory = async (callback) => {
+    try{
+      let storedValues = await AsyncStorage.getItem('userData');
+      console.log('stored', storedValues)
+      storedValues = JSON.parse(storedValues)
+      console.log('parsed', storedValues)
+      this.setState(storedValues);
+      callback && callback(storedValues)
+    }catch(error){ 
+      console.error(error)
+      callback && callback(this.state)
+    }
+    
+  };
+
+  saveToMemory = async () => {
+    console.log('se va a guardar...', this.state)
+    await AsyncStorage.setItem('userData', JSON.stringify(this.state));
   };
 
 
@@ -29,7 +52,9 @@ export default class UserState extends React.Component{
           token: this.state.token,
           removeUser: this.removeUser,
           updateUserData: this.updateUserData,
-          updateToken: this.updateToken
+          updateToken: this.updateToken,
+          readFromMemory: this.readFromMemory,
+          saveToMemory: this.saveToMemory, 
       }}
     >
       {this.props.children}

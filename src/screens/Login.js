@@ -27,7 +27,9 @@ const LogInScreen = () => {
         
         <TouchableOpacity
           title={'Iniciar sesión'}
-          // onPress={}
+          onPress={() => {
+              // TODO: Call to a new userData context function 
+          }}
         />
       </View>
     </View>
