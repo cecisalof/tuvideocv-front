@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-
 import { View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import Context from '../../contexts/context';
 
 const LogInScreen = () => {
   const [email, setUserEmail] = useState("");

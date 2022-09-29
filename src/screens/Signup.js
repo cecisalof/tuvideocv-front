@@ -1,28 +1,50 @@
 import React, { useState } from 'react';
-
-import { View, TextInput, TouchableOpacity, StyleSheet, Text, Alert } from 'react-native';
-
-// const onPress = () => {
-  
-// } 
+import { View, TextInput, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import {
+  API_URL, BASE_URL,
+} from '../axios/config';
+ 
+const axios = require('axios').default;
 
 const SignUpScreen = () => {
   const [email, setUserEmail] = useState("");
   const [password, setUserPassword] = useState("");
+
+
+  const onPress = async () => {
+    await createUser()
+  }
+
+  const createUser = async () => {
+     await axios.post(BASE_URL + API_URL.SIGNUP,
+    {
+      email: email,
+      password: password
+    })
+    .then(function (response) {
+      const data = response.data;
+      return data;
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
 
   return (
     <View style={styles.container}>
       <View>
         <TextInput
           value={email}
-          onChangeText={(email) => setUserEmail( email )}
+          onChangeText={(email) => setUserEmail(email.toLowerCase().trim())}
           placeholder={'Email'}
           style={styles.input}
           keyboardType={'email-address'}
+          textContentType={'emailAddress'}
+          testID={"LoginEmailAddress"}
         />
         <TextInput
           value={password}
-          onChangeText={(password) => setUserPassword( password )}
+          onChangeText={(password) => setUserPassword(password.trim())}
           placeholder={'Contraseña'}
           secureTextEntry={true}
           style={styles.input}
@@ -31,7 +53,7 @@ const SignUpScreen = () => {
         <TouchableOpacity
           style={styles.button}
           // To do: Crear usuario y redirigir a home
-          // onPress={onPress}
+          onPress={onPress}
           >
           <Text style={styles.buttonTitle}>Registrame</Text>
         </TouchableOpacity>
