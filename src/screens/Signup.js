@@ -23,7 +23,7 @@ const SignUpScreen = () => {
     })
     .then(function (response) {
       const data = response.data;
-      return data;
+      return data.token;
     })
     .catch(function (error) {
       console.log(error);
@@ -57,6 +57,12 @@ const SignUpScreen = () => {
           >
           <Text style={styles.buttonTitle}>Registrame</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.logInButton}
+          onPress={() => navigation.navigate('LogIn')}
+          >
+          <Text style={styles.buttonText}>Ir al LogIn</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -84,8 +90,19 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
   },
+  logInButton: {
+    borderWidth: 1,
+    borderColor: '#c00',
+    marginTop: 10,
+    marginBottom: 10,
+    padding: 10,
+    alignItems: 'center',
+  },
   buttonTitle: {
     color: '#fff'
+  },
+  buttonText: {
+    color: '#c00',
   }
 });
 

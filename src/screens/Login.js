@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TextInput, TouchableOpacity, StyleSheet, Text } from 'react-native';
 
 const LogInScreen = () => {
   const [email, setUserEmail] = useState("");
@@ -22,13 +22,15 @@ const LogInScreen = () => {
           secureTextEntry={true}
           style={styles.input}
         />
-        
         <TouchableOpacity
+          style={styles.button}
           title={'Iniciar sesión'}
           onPress={() => {
               // TODO: Call to a new userData context function 
           }}
-        />
+        >
+          <Text style={styles.buttonTitle}>Iniciar Sesión</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -49,6 +51,16 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     marginBottom: 10,
   },
+  button: {
+    borderWidth: 1,
+    borderColor: '#c00',
+    backgroundColor: '#c00',
+    padding: 10,
+    alignItems: 'center',
+  },
+  buttonTitle: {
+    color: '#fff'
+  }
 });
 
 export default LogInScreen;

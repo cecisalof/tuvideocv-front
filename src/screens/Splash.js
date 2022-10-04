@@ -25,7 +25,7 @@ const SplashScreen = ({ navigation }) => {
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
-            routes: [{ name: 'SignUp' }],
+            routes: [{ name: 'SignUp'}],
           })
         )
       }
