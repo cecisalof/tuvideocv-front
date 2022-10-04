@@ -1,33 +1,79 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
+// import Context from '../../contexts/context';
+// import { useContext } from 'react';
+import {
+  API_URL, BASE_URL,
+} from '../axios/config';
+ 
+const axios = require('axios').default;
 
-const LogInScreen = () => {
-  const [email, setUserEmail] = useState("");
-  const [password, setUserPassword] = useState("");
+const LogInScreen = ({navigation}) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [userToken, setUserToken] = useState("");
+
+  const onPress = async () => {
+    await getToken();
+    if(userToken && userToken.length > 0){
+      // User is properly looged in
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Home' }],
+        })
+      )
+    }else {
+      // Redirect to signup
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'SignUp'}],
+        })
+      )
+    }    
+  };
+
+  const getToken = async () => {
+    await axios.post(BASE_URL + API_URL.LOGIN,
+   {
+     email: email,
+     password: password
+   })
+   .then(function (response) {
+     const token = response.data.token;
+     setUserToken(token);
+   })
+   .catch(function (error) {
+     console.log(error);
+   });
+ };
 
   return (
     <View style={styles.container}>
       <View>
         <TextInput
           value={email}
-          onChangeText={(email) => setUserEmail( email )}
+          onChangeText={(email) => setEmail(email.toLowerCase().trim())}
           placeholder={'Email'}
           style={styles.input}
           keyboardType={'email-address'}
+          textContentType={'emailAddress'}
+          testID={"LoginEmailAddress"}
         />
         <TextInput
-          value={password}
-          onChangeText={(password) => setUserPassword( password )}
-          placeholder={'Contraseña'}
-          secureTextEntry={true}
-          style={styles.input}
+           value={password}
+           onChangeText={(password) => setPassword(password.trim())}
+           placeholder={'Contraseña'}
+           secureTextEntry={true}
+           style={styles.input}
         />
         <TouchableOpacity
           style={styles.button}
           title={'Iniciar sesión'}
-          onPress={() => {
-              // TODO: Call to a new userData context function 
-          }}
+          // TODO: Call to a new userData context function 
+          onPress={onPress}
         >
           <Text style={styles.buttonTitle}>Iniciar Sesión</Text>
         </TouchableOpacity>

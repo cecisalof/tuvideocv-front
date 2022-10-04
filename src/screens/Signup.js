@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Context from '../../contexts/context';
+import { useContext } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import {
   API_URL, BASE_URL,
@@ -6,13 +8,14 @@ import {
  
 const axios = require('axios').default;
 
-const SignUpScreen = () => {
+const SignUpScreen = ( {navigation} ) => {
+  const userData = useContext(Context);
+  
   const [email, setUserEmail] = useState("");
   const [password, setUserPassword] = useState("");
 
-
   const onPress = async () => {
-    await createUser()
+    await createUser();
   }
 
   const createUser = async () => {
@@ -52,7 +55,6 @@ const SignUpScreen = () => {
         
         <TouchableOpacity
           style={styles.button}
-          // To do: Crear usuario y redirigir a home
           onPress={onPress}
           >
           <Text style={styles.buttonTitle}>Registrame</Text>
