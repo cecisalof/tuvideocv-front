@@ -10,14 +10,14 @@ const SplashScreen = ({ navigation }) => {
   console.log('Mira el context', userData)
 
   useEffect(() => {
-    userData.readFromMemory((userState) =>{
+    userData.readFromMemory((userState) => {
       console.log('Load from memory', userState)
       if(userState.token && userState.token.length > 0 && userState.userData && userState.userData.uuid){
         // User is properly looged in
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
-            routes: [{ name: 'Welcome' }],
+            routes: [{ name: 'Home' }],
           })
         )
       }else{

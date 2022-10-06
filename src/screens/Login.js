@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
-// import Context from '../../contexts/context';
-// import { useContext } from 'react';
+import Context from '../../contexts/context';
+import { useContext } from 'react';
 import {
   API_URL, BASE_URL,
 } from '../axios/config';
@@ -10,13 +10,21 @@ import {
 const axios = require('axios').default;
 
 const LogInScreen = ({navigation}) => {
+  const userData = useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  console.log(password);
   const [userToken, setUserToken] = useState("");
+  // userInfo includes uuid
+  const [userInfo, setUserInfo] = useState({});
 
   const onPress = async () => {
     await getToken();
-    if(userToken && userToken.length > 0){
+    console.log('token inside onpRESS', userToken);
+    console.log('data inide onPress', userInfo);
+    // WAIT FOR TOKEN SAVED????
+    userData.saveToken(userToken);
+     if(userToken && userToken.length > 0 && userInfo && userInfo.uuid){
       // User is properly looged in
       navigation.dispatch(
         CommonActions.reset({
@@ -24,15 +32,16 @@ const LogInScreen = ({navigation}) => {
           routes: [{ name: 'Home' }],
         })
       )
-    }else {
-      // Redirect to signup
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: 'SignUp'}],
-        })
-      )
-    }    
+    }
+    // else {
+    //   // Redirect to signup
+    //   navigation.dispatch(
+    //     CommonActions.reset({
+    //       index: 0,
+    //       routes: [{ name: 'SignUp'}],
+    //     })
+    //   )
+    // }    
   };
 
   const getToken = async () => {
@@ -42,8 +51,10 @@ const LogInScreen = ({navigation}) => {
      password: password
    })
    .then(function (response) {
-     const token = response.data.token;
-     setUserToken(token);
+     const data = response.data;
+     console.log('data inside post request', data);
+     setUserToken(data.token);
+     setUserInfo(data)
    })
    .catch(function (error) {
      console.log(error);

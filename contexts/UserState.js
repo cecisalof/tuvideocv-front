@@ -6,7 +6,8 @@ export default class UserState extends React.Component{
 
   state = {
     userData: {},
-    token: ''
+    token: '',
+    uuid: ''
   }
   
   removeUser = () => {
@@ -24,7 +25,10 @@ export default class UserState extends React.Component{
   };
 
   // TODO: Call to a new userData context function 
-
+  saveToken = async (userToken) => {
+    console.log('se va a guardar...', userToken)
+    await AsyncStorage.setItem('token', JSON.stringify(userToken));
+  }
 
   readFromMemory = async (callback) => {
     try{
@@ -56,6 +60,7 @@ export default class UserState extends React.Component{
           updateToken: this.updateToken,
           readFromMemory: this.readFromMemory,
           saveToMemory: this.saveToMemory, 
+          saveToken: this.saveToken
       }}
     >
       {this.props.children}

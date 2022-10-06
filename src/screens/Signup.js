@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Context from '../../contexts/context';
 import { useContext } from 'react';
+import { CommonActions } from '@react-navigation/native';
 import { View, TextInput, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import {
   API_URL, BASE_URL,
@@ -13,9 +14,32 @@ const SignUpScreen = ( {navigation} ) => {
   
   const [email, setUserEmail] = useState("");
   const [password, setUserPassword] = useState("");
+  const [userToken, setUserToken] = useState("");
+  const [userInfo, setUserInfo] = useState({})
 
   const onPress = async () => {
     await createUser();
+    console.log('token inside onpRESS', userToken);
+    console.log('data', userInfo);
+    // Wait till token is created???
+     if(userToken && userToken.length > 0 && userInfo){
+      // User is properly looged in
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Home' }],
+        })
+      )
+    }
+  // else{
+  //   // Redirect to login
+  //   navigation.dispatch(
+  //     CommonActions.reset({
+  //       index: 0,
+  //       routes: [{ name: 'SignUp'}],
+  //     })
+  //   )
+  // }
   }
 
   const createUser = async () => {
@@ -26,7 +50,9 @@ const SignUpScreen = ( {navigation} ) => {
     })
     .then(function (response) {
       const data = response.data;
-      return data.token;
+      console.log('inside post request', data);
+      setUserInfo(data)
+      setUserToken(data.token);
     })
     .catch(function (error) {
       console.log(error);
