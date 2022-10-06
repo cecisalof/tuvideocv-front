@@ -13,17 +13,14 @@ const LogInScreen = ({navigation}) => {
   const userData = useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  console.log(password);
   const [userToken, setUserToken] = useState("");
   // userInfo includes uuid
   const [userInfo, setUserInfo] = useState({});
 
   const onPress = async () => {
     await getToken();
-    console.log('token inside onpRESS', userToken);
-    console.log('data inide onPress', userInfo);
-    // WAIT FOR TOKEN SAVED????
-    userData.saveToken(userToken);
+    // TO DO: 
+    // Wait for token read before condition starts
      if(userToken && userToken.length > 0 && userInfo && userInfo.uuid){
       // User is properly looged in
       navigation.dispatch(
@@ -52,7 +49,6 @@ const LogInScreen = ({navigation}) => {
    })
    .then(function (response) {
      const data = response.data;
-     console.log('data inside post request', data);
      setUserToken(data.token);
      setUserInfo(data)
    })

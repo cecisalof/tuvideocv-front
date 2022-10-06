@@ -19,9 +19,8 @@ const SignUpScreen = ( {navigation} ) => {
 
   const onPress = async () => {
     await createUser();
-    console.log('token inside onpRESS', userToken);
-    console.log('data', userInfo);
-    // Wait till token is created???
+    // TO DO: 
+    // Wait for token is created before condition starts
      if(userToken && userToken.length > 0 && userInfo){
       // User is properly looged in
       navigation.dispatch(
@@ -50,7 +49,6 @@ const SignUpScreen = ( {navigation} ) => {
     })
     .then(function (response) {
       const data = response.data;
-      console.log('inside post request', data);
       setUserInfo(data)
       setUserToken(data.token);
     })

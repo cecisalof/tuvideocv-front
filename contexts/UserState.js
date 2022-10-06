@@ -25,10 +25,7 @@ export default class UserState extends React.Component{
   };
 
   // TODO: Call to a new userData context function 
-  saveToken = async (userToken) => {
-    console.log('se va a guardar...', userToken)
-    await AsyncStorage.setItem('token', JSON.stringify(userToken));
-  }
+
 
   readFromMemory = async (callback) => {
     try{
