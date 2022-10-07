@@ -6,9 +6,10 @@ import { useContext } from 'react';
 import {
   API_URL, BASE_URL,
 } from '../axios/config';
+import { PrimaryButton } from '../styles/button';
+
  
 const axios = require('axios').default;
-
 const LogInScreen = ({navigation}) => {
   const userData = useContext(Context);
   const [email, setEmail] = useState("");
@@ -76,14 +77,12 @@ const LogInScreen = ({navigation}) => {
            secureTextEntry={true}
            style={styles.input}
         />
-        <TouchableOpacity
-          style={styles.button}
-          title={'Iniciar sesión'}
+        <PrimaryButton
+          title='Iniciar sesión'
           // TODO: Call to a new userData context function 
           onPress={onPress}
         >
-          <Text style={styles.buttonTitle}>Iniciar Sesión</Text>
-        </TouchableOpacity>
+        </PrimaryButton>
       </View>
     </View>
   );
@@ -104,16 +103,6 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     marginBottom: 10,
   },
-  button: {
-    borderWidth: 1,
-    borderColor: '#c00',
-    backgroundColor: '#c00',
-    padding: 10,
-    alignItems: 'center',
-  },
-  buttonTitle: {
-    color: '#fff'
-  }
 });
 
 export default LogInScreen;
