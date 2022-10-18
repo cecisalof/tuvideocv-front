@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Context from '../../contexts/context';
 import { useContext } from 'react';
 import { CommonActions } from '@react-navigation/native';
@@ -10,51 +10,52 @@ import {
 const axios = require('axios').default;
 
 const SignUpScreen = ( {navigation} ) => {
-  const userData = useContext(Context);
-  
   const [email, setUserEmail] = useState("");
   const [password, setUserPassword] = useState("");
   const [userToken, setUserToken] = useState("");
   const [userInfo, setUserInfo] = useState({})
+  console.log("change State userINFO", userInfo);
+  console.log("change State userToken", userToken);
 
-  const onPress = async () => {
-    await createUser();
-    // TO DO: 
-    // Wait for token is created before condition starts
-     if(userToken && userToken.length > 0 && userInfo){
-      // User is properly looged in
+  // useEffect(() => {
+  // }, [userToken, userInfo]);
+  
+  const onPress = () => {
+    createUser();
+    if(userToken && userToken.length > 0){
+      // if(userInfo && userInfo.uuid){
+        // User is properly looged in
       navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: 'Home' }],
-        })
-      )
-    }
-  // else{
-  //   // Redirect to login
-  //   navigation.dispatch(
-  //     CommonActions.reset({
-  //       index: 0,
-  //       routes: [{ name: 'SignUp'}],
-  //     })
-  //   )
-  // }
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'Home' }],
+          })
+        )
+      } else {
+        // Redirect to signup
+      navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'Signup'}],
+          })
+        )
+      } 
+    // }
   }
 
   const createUser = async () => {
-     await axios.post(BASE_URL + API_URL.SIGNUP,
-    {
-      email: email,
-      password: password
-    })
-    .then(function (response) {
+    const response = await axios.post(BASE_URL + API_URL.SIGNUP,
+      {
+        email: email,
+        password: password
+      })
+    try{
       const data = response.data;
-      setUserInfo(data)
+      setUserInfo(data);
       setUserToken(data.token);
-    })
-    .catch(function (error) {
+    } catch (error){
       console.log(error);
-    });
+    }
   };
 
   return (
@@ -85,7 +86,7 @@ const SignUpScreen = ( {navigation} ) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.logInButton}
-          onPress={() => navigation.navigate('LogIn')}
+          onPress={() => navigation.navigate('Login')}
           >
           <Text style={styles.buttonText}>Ir al LogIn</Text>
         </TouchableOpacity>
