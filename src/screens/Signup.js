@@ -10,12 +10,11 @@ import {
 const axios = require('axios').default;
 
 const SignUpScreen = ( {navigation} ) => {
-  const [email, setUserEmail] = useState("");
-  const [password, setUserPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [userToken, setUserToken] = useState("");
   const [userInfo, setUserInfo] = useState({})
-  console.log("change State userINFO", userInfo);
-  console.log("change State userToken", userToken);
+  console.log(userInfo);
 
   useEffect(() => {
     if(userToken && userToken.length > 0){
@@ -53,16 +52,19 @@ const SignUpScreen = ( {navigation} ) => {
       <View>
         <TextInput
           value={email}
-          onChangeText={(email) => setUserEmail(email.toLowerCase().trim())}
+          onChangeText={(email) => setEmail(email.toLowerCase().trim())}
           placeholder={'Email'}
           style={styles.input}
           keyboardType={'email-address'}
           textContentType={'emailAddress'}
           testID={"LoginEmailAddress"}
         />
+         {/* {userInfo[{'email'}] &&
+          <Text>Este campo está vacío o es inválido</Text>
+          } */}
         <TextInput
           value={password}
-          onChangeText={(password) => setUserPassword(password.trim())}
+          onChangeText={(password) => setPassword(password.trim())}
           placeholder={'Contraseña'}
           secureTextEntry={true}
           style={styles.input}

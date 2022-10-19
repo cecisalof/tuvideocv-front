@@ -83,6 +83,9 @@ const LogInScreen = ({navigation}) => {
         >
         </PrimaryButton>
       </View>
+      {userInfo.error &&
+        <Text>Comprueba tu email y contraseña y vuelve a intenarlo</Text>
+      }
     </View>
   );
 }
