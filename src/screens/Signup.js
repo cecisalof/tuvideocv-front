@@ -17,30 +17,20 @@ const SignUpScreen = ( {navigation} ) => {
   console.log("change State userINFO", userInfo);
   console.log("change State userToken", userToken);
 
-  // useEffect(() => {
-  // }, [userToken, userInfo]);
+  useEffect(() => {
+    if(userToken && userToken.length > 0){
+        // User is properly looged in
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Home' }],
+        })
+      )
+    }
+  }, [userToken, userInfo]);
   
   const onPress = () => {
     createUser();
-    if(userToken && userToken.length > 0){
-      // if(userInfo && userInfo.uuid){
-        // User is properly looged in
-      navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{ name: 'Home' }],
-          })
-        )
-      } else {
-        // Redirect to signup
-      navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{ name: 'Signup'}],
-          })
-        )
-      } 
-    // }
   }
 
   const createUser = async () => {

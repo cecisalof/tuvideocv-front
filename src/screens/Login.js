@@ -79,7 +79,6 @@ const LogInScreen = ({navigation}) => {
         />
         <PrimaryButton
           title='Iniciar sesión'
-          // TODO: Call to a new userData context function 
           onPress={onPress}
         >
         </PrimaryButton>
