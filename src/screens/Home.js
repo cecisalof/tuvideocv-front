@@ -6,8 +6,10 @@ import {
 
 const axios = require('axios').default;
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, route }) => {
+  const { token }= route.params;
   const [data, setData] = useState("");
+  console.log(data);
   
   useEffect(() => {
     getJobList();
@@ -18,7 +20,7 @@ const HomeScreen = ({ navigation }) => {
     const response = await axios.get(BASE_URL + API_URL.JOB_LIST,
       {
         headers: {
-          'Authorization': `token 30192393d2bdb69ac3120f7991ee1f9dc7b4ae41`
+          'Authorization': `token ${token}`
         }
       })
     try{

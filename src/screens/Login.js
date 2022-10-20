@@ -22,9 +22,8 @@ const LogInScreen = ({navigation}) => {
       navigation.dispatch(
           CommonActions.reset({
             index: 0,
-            routes: [{ name: 'Home' }],
             // passing userToken to Home 
-            token: userToken,
+            routes: [{ name: 'Home', params: { token: userToken } }],
           })
         )
       } else {
