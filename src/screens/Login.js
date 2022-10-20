@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { View, TextInput, StyleSheet, Text } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import {
   API_URL, BASE_URL,
@@ -23,6 +23,8 @@ const LogInScreen = ({navigation}) => {
           CommonActions.reset({
             index: 0,
             routes: [{ name: 'Home' }],
+            // passing userToken to Home 
+            token: userToken,
           })
         )
       } else {
