@@ -5,6 +5,8 @@ import {
   API_URL, BASE_URL,
 } from '../axios/config';
 import { PrimaryButton } from '../styles/button';
+import Context from '../../contexts/context';
+import { useContext } from 'react';
  
 const axios = require('axios').default;
 
@@ -14,10 +16,14 @@ const LogInScreen = ({navigation}) => {
   const [userToken, setUserToken] = useState("");
   // userInfo includes uuid
   const [userInfo, setUserInfo] = useState({});
+  const userData = useContext(Context);
 
   useEffect(() => {
     if(userToken && userToken.length > 0){
       if(userInfo && userInfo.uuid){
+        //TO DO SAVE USER LOGEED DATA
+        // userData.saveToken(userToken)
+
         // User is properly looged in
       navigation.dispatch(
           CommonActions.reset({

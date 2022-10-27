@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Context from '../../contexts/context';
-import { useContext } from 'react';
+import { PrimaryButton } from '../styles/button';
 import { CommonActions } from '@react-navigation/native';
 import { View, TextInput, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import {
@@ -70,18 +69,16 @@ const SignUpScreen = ( {navigation} ) => {
           style={styles.input}
         />
         
-        <TouchableOpacity
-          style={styles.button}
+        <PrimaryButton
+          title='Registrame'
           onPress={onPress}
           >
-          <Text style={styles.buttonTitle}>Registrame</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.logInButton}
+        </PrimaryButton>
+        <PrimaryButton
+          title='Ir a LogIn'
           onPress={() => navigation.navigate('Login')}
           >
-          <Text style={styles.buttonText}>Ir al LogIn</Text>
-        </TouchableOpacity>
+        </PrimaryButton>
       </View>
     </View>
   );

@@ -6,27 +6,23 @@ import Constants from 'expo-constants'
 import { Icon } from "react-native-elements";
 
 
-const App = () => {
+const App = (props) => {
+  const { data } = props;
+  console.log(data);
   const [search, setSearch] = useState('');
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [masterDataSource, setMasterDataSource] = useState([]);
   const [numeroOriginal, setNumeroTotal]  = useState("0");
   const [stateFounded, setStateFounded]  = useState("0");
+
   useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then((response) => response.json())
-      .then((responseJson) => {
-        setFilteredDataSource(responseJson);
-        setMasterDataSource(responseJson);
-        setStateFounded(Object.keys(responseJson).length);
-        setNumeroTotal(Object.keys(responseJson).length);
-      })
-      .catch((error) => {
-        console.log('There has been a problem with your fetch operation: ' + error.message);
-        console.error(error);
-        throw error;
-      });
-  }, []);
+    if (data) {
+      setMasterDataSource(data)
+      setFilteredDataSource(data)
+      setNumeroTotal(Object.keys(data).length)
+      setStateFounded(Object.keys(data).length)
+    }    
+  }, [masterDataSource]);
 
   const searchFilterFunction = (text) => {
     // Check if searched text is not blank
@@ -126,8 +122,8 @@ const App = () => {
     </View>
     <FlatList
       data={filteredDataSource}
-      renderItem={({ item }) =>
-      <View style={[styles.cardGeneric, item.id%3==0 ? styles.cardBlue : item.id%3==1 ? styles.cardGreen : styles.cardPurple]}>
+      renderItem={({ item, index }) =>
+      <View  key={index} style={[styles.cardGeneric, index%3==0 ? styles.cardBlue : index%3==1 ? styles.cardGreen : styles.cardPurple]}>
         <Image source={require('../assets/icons/starbuckslogo.png')} style={styles.itemImage} />
         <View>
             <Text style={[styles.itemGeneric, styles.itemName]}>{item.name}</Text>
@@ -137,13 +133,13 @@ const App = () => {
                     type="material-icons"
                     size={35}
                     color='#B2B2B4'/>
-              <Text style={[styles.itemGeneric, styles.itemPlace]}>Madrid</Text>
+              <Text style={[styles.itemGeneric, styles.itemPlace]}>{item.address}</Text>
             </View>
-            <Text style={[styles.item, styles.itemContrato]}>Contrato Indefinido</Text>
+            <Text style={[styles.item, styles.itemContrato]}></Text>
         </View>
        </View>
       }
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item, index) => index}
       //ItemSeparatorComponent={myItemSeparator}
       ListEmptyComponent={myListEmpty}
       ListHeaderComponent={() => (

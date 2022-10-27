@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, LogBox } from 'react-native';
+// import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import {
   API_URL, BASE_URL,
 } from '../axios/config';
 import CustomTabBar from '../components/CustomTabBar'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Empleos from './Empleos'
+import Jobs from './Jobs'
+// import { Camera, CameraType } from 'expo-camera';
 
 const axios = require('axios').default;
 
 const HomeScreen = ({ navigation, route }) => {
-  /*const { token }= route.params;
-  const [data, setData] = useState("");
-  console.log(data);
-  
+  const { token }= route.params;
+
+  const [data, setData] = useState("");  
   useEffect(() => {
     getJobList();
   }, []);
   
-
   const getJobList = async () => {
     const response = await axios.get(BASE_URL + API_URL.JOB_LIST,
       {
@@ -28,24 +27,25 @@ const HomeScreen = ({ navigation, route }) => {
       })
     try{
       const data = response.data;
-      setData(data);
+      setData(data.results);
     } catch (error){
       console.log(error);
     }
-  };*/
+  };
+
   function JobScreen() {
     return (
-      <Empleos />
+      <Jobs data={data}/>
     );
   }
   function PerfilScreenF() {
     return (
-    <Empleos/>
+    <Jobs data={data}/>
     );
   }
   function PerfilScreen3() {
     return (
-      <Empleos />
+      <Jobs data={data}/>
     );
   }
   const Tab = createBottomTabNavigator();
@@ -77,6 +77,6 @@ const HomeScreen = ({ navigation, route }) => {
          />
          </Tab.Navigator>
      )
+  };
   
-}
 export default HomeScreen;

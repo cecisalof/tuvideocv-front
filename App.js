@@ -13,7 +13,7 @@ function App() {
   return (
     <NavigationContainer>
       <UserState>
-        <Stack.Navigator initialRouteName="Home">
+        <Stack.Navigator initialRouteName="Splash">
           <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="Login" component={LogInScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="Signup" component={SignUpScreen} options={{ headerShown: false }}/>
