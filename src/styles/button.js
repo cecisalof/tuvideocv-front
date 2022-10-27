@@ -8,6 +8,7 @@ const PrimaryTouchableOpacity = styled.TouchableOpacity `
     padding: 10px;
     align-items: 'center';
     border-radius: 50px;
+    margin: 5px;
 `
 const ButtonText = styled.Text `
     color: #7E7777;
