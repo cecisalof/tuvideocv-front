@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { PrimaryButton } from '../styles/button';
 
 const axios = require('axios').default;
 
 const HomeScreen = ({ navigation, route }) => {
-const { token }= route.params;
+const { uuid }= route.params;
 
 const onPress = () => {
-  navigation.navigate('CV')
+  navigation.navigate('CV', { 
+    uuid: uuid
+   })
 }
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>

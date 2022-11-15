@@ -29,7 +29,10 @@ const LogInScreen = ({navigation}) => {
           CommonActions.reset({
             index: 0,
             // passing userToken to Home 
-            routes: [{ name: 'Home', params: { token: userToken } }],
+            routes: [{ name: 'Home', params: { 
+              uuid: userInfo.uuid
+              } 
+            }],
           })
         )
       } else {

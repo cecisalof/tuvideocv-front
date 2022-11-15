@@ -6,17 +6,20 @@ import { Video } from 'expo-av';
 import { PrimaryButton } from '../styles/button';
 import * as Sharing from 'expo-sharing';
 const axios = require('axios').default;
+import {
+  API_URL, BASE_URL,
+} from '../axios/config';
 
-const CVScreen = ({ navigation}) => {
+const CVScreen = ({ navigation, route}) => {
   let cameraRef = useRef();
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasMicrophonePermission, setHasMicrophonePermission] = useState();
   const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
   const [isRecording, setIsRecording] = useState(false);
   const [video, setVideo] = useState();
+  const [videoUri, setVideoUri] = useState('');
   
   const [type, setType] = useState(CameraType.back);
-  console.log(type);
   
   useEffect(() => {
     (async () => {
@@ -28,7 +31,10 @@ const CVScreen = ({ navigation}) => {
       setHasMicrophonePermission(microphonePermission.status === "granted");
       setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
     })();
-  }, []);
+    if (video) {
+      setVideoUri(video.uri)
+    }
+  }, [video]);
 
   const requestPermission = () => {
     setHasCameraPermission(cameraPermission.status === 'granted');
@@ -65,23 +71,27 @@ const CVScreen = ({ navigation}) => {
 
   const stopRecording = () => {
     setIsRecording(false);
+    setVideo(video);
     cameraRef.current.stopRecording();
   }
 
 
-  if (video) {
-    let shareVideo = () => {
-      Sharing.shareAsync(video.uri).then(() => {
-        setVideo(undefined);
-      });
+  if (video) { 
+    let saveVideo = async () => {
+      // MediaLibrary.saveToLibraryAsync(video.uri).then(() => {
+      //   setVideo(undefined);
+      // });
+      const response = await axios.patch(BASE_URL + API_URL.USER + route.params.uuid,
+        {
+          video_cv: video.uri 
+        })
+      try{
+        const data = response.data;
+        console.log('data', data);
+      } catch (error){
+        console.log(error);
+      }
     };
-
-    let saveVideo = () => {
-      MediaLibrary.saveToLibraryAsync(video.uri).then(() => {
-        setVideo(undefined);
-      });
-    };
-  
   return (
     <SafeAreaView style={styles.container}>
         <Video
@@ -91,9 +101,8 @@ const CVScreen = ({ navigation}) => {
           resizeMode='contain'
           isLooping
         />
-        <PrimaryButton title="Compartir" onPress={shareVideo} />
         {hasMediaLibraryPermission ? <PrimaryButton title="Guardar" onPress={saveVideo} /> : undefined}
-        <PrimaryButton title="Canelar" onPress={() => setVideo(undefined)} />
+        <PrimaryButton title="Cancelar" onPress={() => setVideo(undefined)} />
       </SafeAreaView>
     );
   }
@@ -101,8 +110,8 @@ const CVScreen = ({ navigation}) => {
   return (
     <Camera style={styles.container} ref={cameraRef} type={type}>
       <View style={styles.buttonContainer}>
-        <PrimaryButton title={isRecording ? "Stop Recording" : "Record Video"} onPress={isRecording ? stopRecording : recordVideo} />
-        <PrimaryButton title={"Cámara frontal"} onPress={toggleCameraType} />
+        <PrimaryButton title={isRecording ? "Parar grabación" : "Grabar vídeo"} onPress={isRecording ? stopRecording : recordVideo} />
+        <PrimaryButton title={"Rotar cámara"} onPress={toggleCameraType} />
       </View>
     </Camera>
     );
@@ -112,11 +121,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
+    backgroundColor: "transparent",
   },
   buttonContainer: {
-    backgroundColor: "#fff",
-    alignSelf: "flex-end"
+    backgroundColor: "transparent",
+    alignSelf: "center",
+    marginBottom: 30
   },
   video: {
     flex: 1,
