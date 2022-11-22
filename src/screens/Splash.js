@@ -51,7 +51,7 @@ const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     userData.readFromMemory((userState) => {
       console.log('Load from memory', userState)
-      if(userState.token && userState.token.length > 0 && userState.userData && userState.userData.uuid){
+      if(userState && userState.token && userState.token.length > 0 && userState.userData && userState.userData.uuid){
         // User is properly looged in
         navigation.dispatch(
           CommonActions.reset({
