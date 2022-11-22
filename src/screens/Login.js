@@ -30,7 +30,8 @@ const LogInScreen = ({navigation}) => {
             index: 0,
             // passing userToken to Home 
             routes: [{ name: 'Home', params: { 
-              uuid: userInfo.uuid
+              uuid: userInfo.uuid,
+              token: userToken
               } 
             }],
           })

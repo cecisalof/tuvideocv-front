@@ -11,6 +11,9 @@ import {
 } from '../axios/config';
 
 const CVScreen = ({ navigation, route}) => {
+  const { uuid, token } = route.params;
+  console.log(token);
+  console.log(uuid);
   let cameraRef = useRef();
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasMicrophonePermission, setHasMicrophonePermission] = useState();
@@ -18,6 +21,7 @@ const CVScreen = ({ navigation, route}) => {
   const [isRecording, setIsRecording] = useState(false);
   const [video, setVideo] = useState();
   const [videoUri, setVideoUri] = useState('');
+  const [status, setStatus] = React.useState({});
   
   const [type, setType] = useState(CameraType.back);
   
@@ -32,6 +36,7 @@ const CVScreen = ({ navigation, route}) => {
       setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
     })();
     if (video) {
+      console.log(video.uri);
       setVideoUri(video.uri)
     }
   }, [video]);
@@ -81,10 +86,16 @@ const CVScreen = ({ navigation, route}) => {
       // MediaLibrary.saveToLibraryAsync(video.uri).then(() => {
       //   setVideo(undefined);
       // });
-      const response = await axios.patch(BASE_URL + API_URL.USER + route.params.uuid,
+      const response = await axios.patch('https://tuvideocv.codepremium.es/api/user/26074e2d-e42a-4e51-a488-860879829760', 
         {
-          video_cv: video.uri 
-        })
+          header: {
+            'Authorization': 'Token 30192393d2bdb69ac3120f7991ee1f9dc7b4ae41'
+          }
+        },
+        {
+          "video_cv": ""
+        }
+        )
       try{
         const data = response.data;
         console.log('data', data);
@@ -100,6 +111,7 @@ const CVScreen = ({ navigation, route}) => {
           useNativeControls
           resizeMode='contain'
           isLooping
+          onPlaybackStatusUpdate={status => setStatus(() => status)}
         />
         {hasMediaLibraryPermission ? <PrimaryButton title="Guardar" onPress={saveVideo} /> : undefined}
         <PrimaryButton title="Cancelar" onPress={() => setVideo(undefined)} />

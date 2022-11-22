@@ -5,11 +5,12 @@ import { PrimaryButton } from '../styles/button';
 const axios = require('axios').default;
 
 const HomeScreen = ({ navigation, route }) => {
-const { uuid }= route.params;
+const { uuid, token }= route.params;
 
 const onPress = () => {
   navigation.navigate('CV', { 
-    uuid: uuid
+    uuid: uuid, 
+    token: token
    })
 }
   return (
