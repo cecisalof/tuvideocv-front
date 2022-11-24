@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, SafeAreaView} from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import { Video } from 'expo-av';
 import { PrimaryButton } from '../styles/button';
-import * as Sharing from 'expo-sharing';
+// import * as Sharing from 'expo-sharing';
 const axios = require('axios').default;
 import {
   API_URL, BASE_URL,
@@ -12,8 +12,9 @@ import {
 
 const CVScreen = ({ navigation, route}) => {
   const { uuid, token } = route.params;
-  console.log(token);
   console.log(uuid);
+  console.log(token);
+
   let cameraRef = useRef();
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasMicrophonePermission, setHasMicrophonePermission] = useState();
@@ -83,18 +84,18 @@ const CVScreen = ({ navigation, route}) => {
 
   if (video) { 
     let saveVideo = async () => {
-      // MediaLibrary.saveToLibraryAsync(video.uri).then(() => {
-      //   setVideo(undefined);
-      // });
-      const response = await axios.patch('https://tuvideocv.codepremium.es/api/user/26074e2d-e42a-4e51-a488-860879829760', 
+      MediaLibrary.saveToLibraryAsync(video.uri).then(() => {
+        setVideo(undefined);
+      });
+      const response = await axios.patch(BASE_URL + API_URL.USER + uuid, 
         {
-          header: {
-            'Authorization': 'Token 30192393d2bdb69ac3120f7991ee1f9dc7b4ae41'
+          headers: {
+            'Authorization': 'Token' + ' ' + token
           }
         },
-        {
-          "video_cv": ""
-        }
+        // {
+        //   'video_cv': ''
+        // }
         )
       try{
         const data = response.data;
