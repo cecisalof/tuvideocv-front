@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, StyleSheet, Text } from 'react-native';
+import { View, TextInput, StyleSheet, Text, Image } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import {
   API_URL, BASE_URL,
@@ -71,7 +71,11 @@ const LogInScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <View>
+      <View style={styles.inputContainer}>
+        <View style={styles.imageContainer}>
+          <Image source={require('../assets/icons/video-c.png')} style={styles.iconTop} />
+          <Text style={styles.title}>Login</Text>
+        </View>
         <TextInput
           value={email}
           onChangeText={(email) => setEmail(email.toLowerCase().trim())}
@@ -80,22 +84,25 @@ const LogInScreen = ({navigation}) => {
           keyboardType={'email-address'}
           textContentType={'emailAddress'}
           testID={"LoginEmailAddress"}
+          placeholderTextColor='#7E7777'
         />
         <TextInput
-           value={password}
-           onChangeText={(password) => setPassword(password.trim())}
-           placeholder={'*****'}
-           secureTextEntry={true}
-           style={styles.input}
+          value={password}
+          onChangeText={(password) => setPassword(password.trim())}
+          placeholder={'Contraseña'}
+          secureTextEntry={true}
+          style={styles.input}
+          placeholderTextColor='#7E7777'
         />
-        <PrimaryButton
-          title='Iniciar sesión'
-          onPress={onPress}
-        >
-        </PrimaryButton>
+        <View style={styles.btnContainerStyle}>
+          <PrimaryButton
+            title='Iniciar sesión'
+            onPress={onPress}
+          />
+        </View>
       </View>
       {userInfo.error &&
-        <Text>Comprueba tu email y contraseña y vuelve a intenarlo</Text>
+        <Text style={styles.errorText}>Comprueba tu email y contraseña y vuelve a intenarlo</Text>
       }
     </View>
   );
@@ -108,14 +115,40 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#ecf0f1',
   },
-  input: {
-    width: 200,
-    height: 44,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: 'black',
-    marginBottom: 10,
+  iconTop: {
+    width: '35%',
+    minWidth: 100,
+    maxWidth: 200,
+    resizeMode: 'contain',
   },
+  title: {
+    fontSize: 32,
+    fontWeight: '700',
+  },
+  imageContainer: {
+    alignItems: 'center'
+  },
+  inputContainer: {
+    width: '80%',
+  },
+  input: {
+    width: '100%',
+    height: 44,
+    borderBottomWidth: 1,
+    borderColor: 'black',
+    marginBottom: 15,
+    fontWeight: '600',
+    fontSize: 15
+  },
+  btnContainerStyle: {
+    marginTop: 20,
+    alignItems: 'center',
+    alignSelf: 'center'
+  },
+  errorText: {
+    color: 'red',
+    margin: 20
+  }
 });
 
 export default LogInScreen;
