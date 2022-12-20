@@ -12,9 +12,7 @@ import {
 
 const CVScreen = ({ navigation, route}) => {
   const { uuid, token } = route.params;
-  console.log(uuid);
   console.log(token);
-
   let cameraRef = useRef();
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasMicrophonePermission, setHasMicrophonePermission] = useState();
@@ -90,13 +88,10 @@ const CVScreen = ({ navigation, route}) => {
       const response = await axios.patch(BASE_URL + API_URL.USER + uuid, 
         {
           headers: {
-            'Authorization': 'Token' + ' ' + token
+            Authorization: 'Token ' + token
           }
         },
-        // {
-        //   'video_cv': ''
-        // }
-        )
+      )
       try{
         const data = response.data;
         console.log('data', data);
@@ -133,7 +128,7 @@ const CVScreen = ({ navigation, route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
     justifyContent: 'flex-end',
     backgroundColor: "transparent",
   },

@@ -75,7 +75,7 @@ const SplashScreen = ({ navigation }) => {
   //   return null;
   // } else {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', fontFamily: 'Nunito_400Regular' }}>
+      <View>
         <Text>Cargando... {userData.token}</Text>
 
       </View>
