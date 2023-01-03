@@ -12,7 +12,7 @@ import {
 
 const CVScreen = ({ navigation, route}) => {
   const { uuid, token } = route.params;
-  console.log(token);
+
   let cameraRef = useRef();
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasMicrophonePermission, setHasMicrophonePermission] = useState();
@@ -79,26 +79,37 @@ const CVScreen = ({ navigation, route}) => {
     cameraRef.current.stopRecording();
   }
 
-
   if (video) { 
     let saveVideo = async () => {
       MediaLibrary.saveToLibraryAsync(video.uri).then(() => {
         setVideo(undefined);
       });
-      const response = await axios.patch(BASE_URL + API_URL.USER + uuid, 
+
+      const response = await axios.get(BASE_URL + API_URL.USER + uuid, 
         {
           headers: {
-            Authorization: 'Token ' + token
-          }
+            'Authorization': `token ${token}`
+          },
         },
-      )
-      try{
+        {
+          "name": "Cecilia",
+          "country": "PRUEBA",
+          "address": "PRUEBA",
+          "bio": "Front End Dev from frontend",
+          "surname": "Losada FFFFFFFF",
+          "video_cv": null,
+          "created_at": "2022-10-06T13:54:23.938522Z",
+          "updated_at": "2022-12-20T14:30:15.665825Z"
+      }
+      );
+      try {
         const data = response.data;
         console.log('data', data);
-      } catch (error){
+      } catch (error) {
         console.log(error);
       }
     };
+    
   return (
     <SafeAreaView style={styles.container}>
         <Video

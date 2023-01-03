@@ -16,6 +16,7 @@ const LogInScreen = ({navigation}) => {
   const [userToken, setUserToken] = useState("");
   // userInfo includes uuid
   const [userInfo, setUserInfo] = useState({});
+  console.log(userInfo);
   const userData = useContext(Context);
 
   useEffect(() => {
