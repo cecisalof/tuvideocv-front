@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
       top: 590,
       borderTopLeftRadius: 30,
       borderTopRightRadius: 30,
-      overflow: 'hidden',
+      overflow: "hidden",
       position: 'absolute',
       left: 0,
       bottom: 0,
