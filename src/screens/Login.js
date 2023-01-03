@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, StyleSheet, Text, Image } from 'react-native';
+import { View, TextInput, StyleSheet, Text, Image, AsyncStorageStatic } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import {
   API_URL, BASE_URL,
@@ -7,6 +7,7 @@ import {
 import { PrimaryButton } from '../styles/button';
 import Context from '../../contexts/context';
 import { useContext } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
  
 const axios = require('axios').default;
 
@@ -66,7 +67,9 @@ const LogInScreen = ({navigation}) => {
     } catch (error){
       console.log(error);
     }
+
  };
+
 
 
   return (
