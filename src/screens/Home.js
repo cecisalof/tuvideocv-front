@@ -73,7 +73,7 @@ const HomeScreen = ({ navigation, route }) => {
           }
         })
       const data = response.data;
-      setData(data)
+      setData(data.results);
     } catch (error){
       console.log("Entra en error Home");
       console.log(error.response.data);
@@ -159,12 +159,6 @@ const HomeScreen = ({ navigation, route }) => {
          </Tab.Navigator>
      )
   };
-  </LinearGradient> 
-      
-     </View>
-  );
-
-}
 
 const styles = StyleSheet.create({
   container: {
