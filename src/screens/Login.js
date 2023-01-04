@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, StyleSheet, Text, ActivityIndicator } from 'react-native';
+import { View, TextInput, StyleSheet, Text, Image, AsyncStorageStatic, ActivityIndicator } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import {
   API_URL, BASE_URL,
@@ -47,7 +47,11 @@ const LogInScreen = ({navigation}) => {
           CommonActions.reset({
             index: 0,
             // passing userToken to Home 
-            routes: [{ name: 'Home', params: { token: userToken } }],
+            routes: [{ name: 'Home', params: { 
+              uuid: userInfo.uuid,
+              token: userToken
+              } 
+            }],
           })
         )
       } else {
@@ -82,39 +86,46 @@ const LogInScreen = ({navigation}) => {
       console.log("Entra en error Login");
       console.log(error.response.data);
     }
+
  };
 
  //<ActivityIndicator size="large" color="#8325EC" /> Loading circle
+
   return (
     <View style={styles.container}>
-      <View>
+      <View style={styles.inputContainer}>
+        <View style={styles.imageContainer}>
+          <Image source={require('../assets/icons/video-c.png')} style={styles.iconTop} />
+          <Text style={styles.title}>Login</Text>
+        </View>
         <TextInput
           value={email}
           //onChangeText={(email) => setEmail(email.toLowerCase().trim())}
-          onChangeText={(email) => setEmail("aaaa@gmail.com")}
+          //onChangeText={(email) => setEmail("aaaa@gmail.com")}
           placeholder={'Email'}
           style={styles.input}
           keyboardType={'email-address'}
           textContentType={'emailAddress'}
           testID={"LoginEmailAddress"}
+          placeholderTextColor='#7E7777'
         />
         <TextInput
-           value={password}
-           //onChangeText={(password) => setPassword(password.trim())}
-           onChangeText={(password) => setPassword("123Adri456")}
-           placeholder={'*****'}
-           secureTextEntry={true}
-           style={styles.input}
+          value={password}
+          onChangeText={(password) => setPassword(password.trim())}
+          placeholder={'Contraseña'}
+          secureTextEntry={true}
+          style={styles.input}
+          placeholderTextColor='#7E7777'
         />
-        <PrimaryButton
-          title='Iniciar sesión'
-          onPress={onPress}
-        >
-        </PrimaryButton>
-        <ActivityIndicator size="large" color="#8325EC" animating={isLoadingVisible}/>
+        <View style={styles.btnContainerStyle}>
+          <PrimaryButton
+            title='Iniciar sesión'
+            onPress={onPress}
+          />
+        </View>
       </View>
       {userInfo.error &&
-        <Text>Comprueba tu email y contraseña y vuelve a intentarlo</Text>
+        <Text style={styles.errorText}>Comprueba tu email y contraseña y vuelve a intenarlo</Text>
       }
     </View>
   );
@@ -127,14 +138,40 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#ecf0f1',
   },
-  input: {
-    width: 200,
-    height: 44,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: 'black',
-    marginBottom: 10,
+  iconTop: {
+    width: '35%',
+    minWidth: 100,
+    maxWidth: 200,
+    resizeMode: 'contain',
   },
+  title: {
+    fontSize: 32,
+    fontWeight: '700',
+  },
+  imageContainer: {
+    alignItems: 'center'
+  },
+  inputContainer: {
+    width: '80%',
+  },
+  input: {
+    width: '100%',
+    height: 44,
+    borderBottomWidth: 1,
+    borderColor: 'black',
+    marginBottom: 15,
+    fontWeight: '600',
+    fontSize: 15
+  },
+  btnContainerStyle: {
+    marginTop: 20,
+    alignItems: 'center',
+    alignSelf: 'center'
+  },
+  errorText: {
+    color: 'red',
+    margin: 20
+  }
 });
 
 export default LogInScreen;
