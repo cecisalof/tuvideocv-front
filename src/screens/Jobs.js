@@ -7,7 +7,7 @@ import { Icon } from "react-native-elements";
 import Modal from "react-native-modal";
 import DefaultModalContent from '../components/DefaultModalContent';
 import DefaultModalContentOptions from '../components/DefaultModalContentOptions';
-import { EndOfLineState } from 'typescript';
+//import { EndOfLineState } from 'typescript';
 import {
   API_URL, BASE_URL,
 } from '../axios/config';
