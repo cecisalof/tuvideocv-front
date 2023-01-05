@@ -159,12 +159,6 @@ const HomeScreen = ({ navigation, route }) => {
          </Tab.Navigator>
      )
   };
-  </LinearGradient> 
-      
-     </View>
-  );
-
-}
 
 const styles = StyleSheet.create({
   container: {
