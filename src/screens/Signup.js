@@ -5,7 +5,7 @@ import { View, TextInput, TouchableOpacity, StyleSheet, Text } from 'react-nativ
 import {
   API_URL, BASE_URL,
 } from '../axios/config';
- 
+
 const axios = require('axios').default;
 
 const SignUpScreen = ( {navigation} ) => {
@@ -13,9 +13,10 @@ const SignUpScreen = ( {navigation} ) => {
   const [password, setPassword] = useState("");
   const [userToken, setUserToken] = useState("");
   const [userInfo, setUserInfo] = useState({})
-  console.log(userInfo);
+  console.log("Hola hola",userInfo);
 
   useEffect(() => {
+  
     if(userToken && userToken.length > 0){
         // User is properly looged in
       navigation.dispatch(
@@ -32,16 +33,17 @@ const SignUpScreen = ( {navigation} ) => {
   }
 
   const createUser = async () => {
-    const response = await axios.post(BASE_URL + API_URL.SIGNUP,
-      {
-        email: email,
-        password: password
-      })
     try{
+      const response = await axios.post(BASE_URL + API_URL.SIGNUP,
+        {
+          email: email,
+          password: password
+        })
       const data = response.data;
       setUserInfo(data);
       setUserToken(data.token);
     } catch (error){
+      console.log("Entra en error SignUp");
       console.log(error);
     }
   };
@@ -68,7 +70,6 @@ const SignUpScreen = ( {navigation} ) => {
           secureTextEntry={true}
           style={styles.input}
         />
-        
         <PrimaryButton
           title='Registrame'
           onPress={onPress}

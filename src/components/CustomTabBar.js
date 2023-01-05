@@ -77,7 +77,7 @@ function CustomTabBar({ state, descriptors, navigation }) {
                   
                 </TouchableOpacity>
             );
-          } else if (route.name === 'Me') {
+          } else if (route.name === 'MyApp') {
             return (
                 <TouchableOpacity
                   key="3"
