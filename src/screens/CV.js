@@ -73,11 +73,53 @@ const CVScreen = ({ navigation, route}) => {
     });
   }
 
-  const stopRecording = () => {
+  const stopRecording = async () => {
     setIsRecording(false);
+    
+    // utitlity function to convert BLOB to BASE64
+    const blobToBase64 = (blob) => {
+      const reader = new FileReader();
+      console.log('READER', reader);
+      reader.readAsDataURL(blob);
+      console.log();
+      console.log('reader.readAsDataURL(blob)', reader.readAsDataURL(blob));
+      return new Promise((resolve) => {
+        reader.onloadend = () => {
+          resolve(reader.result);
+        };
+      });
+    };
+    
+    // // Fetch VIDEO binary blob data
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      console.log('xhr', xhr);
+      // xhr.onload = function () {
+      //   resolve(xhr.response);
+      // };
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+            resolve(xhr.response);
+        }
+      };
+      xhr.onerror = function (e) {
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      console.log(videoUri);
+      xhr.open("GET", videoUri, true);
+      xhr.send(null);
+    });
+    const videoBase64 = await blobToBase64(blob);
+    console.log('videoBase64', videoBase64);
+
     setVideo(video);
     cameraRef.current.stopRecording();
+
+    // We're done with the blob and file uploading, close and release it
+    // blob.close()
   }
+
 
   if (video) { 
     let saveVideo = async () => {
@@ -85,7 +127,7 @@ const CVScreen = ({ navigation, route}) => {
         setVideo(undefined);
       });
 
-      const response = await axios.get(BASE_URL + API_URL.USER + uuid, 
+      const response = await axios.patch(BASE_URL + API_URL.USER + uuid, 
         {
           headers: {
             'Authorization': `token ${token}`
@@ -100,7 +142,7 @@ const CVScreen = ({ navigation, route}) => {
           "video_cv": null,
           "created_at": "2022-10-06T13:54:23.938522Z",
           "updated_at": "2022-12-20T14:30:15.665825Z"
-      }
+        }
       );
       try {
         const data = response.data;
