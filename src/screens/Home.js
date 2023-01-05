@@ -16,8 +16,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 const axios = require('axios').default;
 
 const HomeScreen = ({ navigation, route }) => {
-    console.log("ROUTE" + route);
-    //const { uuid, token } = route.params;
   const [token, setToken] = useState("Loading");
   const [data, setData] = useState("");  
   const [dataJobFavorite, setDataJobFavorite] = useState("");  
@@ -122,7 +120,7 @@ const HomeScreen = ({ navigation, route }) => {
   }
   function PerfilScreenF() {
     return (
-    <Main uuid={uuid} /> //Poner el layout que corresponda
+    <Main route={route} /> //Poner el layout que corresponda
     //<MyApplications />
     );
   }
