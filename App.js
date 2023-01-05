@@ -19,7 +19,6 @@ function App() {
           <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="Login" component={LogInScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="Signup" component={SignUpScreen} options={{ headerShown: false }}/>
-          <Stack.Screen name="JobsList" component={JobsListScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="Jobs" component={JobScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="MyApplications" component={MyApplicationsScreen} options={{ headerShown: false }}/>

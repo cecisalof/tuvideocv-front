@@ -101,7 +101,7 @@ const LogInScreen = ({navigation}) => {
         <TextInput
           value={email}
           //onChangeText={(email) => setEmail(email.toLowerCase().trim())}
-          //onChangeText={(email) => setEmail("aaaa@gmail.com")}
+          onChangeText={(email) => setEmail("aaaa@gmail.com")}
           placeholder={'Email'}
           style={styles.input}
           keyboardType={'email-address'}
@@ -111,7 +111,8 @@ const LogInScreen = ({navigation}) => {
         />
         <TextInput
           value={password}
-          onChangeText={(password) => setPassword(password.trim())}
+          //onChangeText={(password) => setPassword(password.trim())}
+          onChangeText={(password) => setPassword("123Adri456")}
           placeholder={'Contraseña'}
           secureTextEntry={true}
           style={styles.input}
