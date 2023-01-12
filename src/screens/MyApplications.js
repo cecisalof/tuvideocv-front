@@ -1,35 +1,74 @@
 import { useState, useEffect } from 'react';
 import React from "react";
-import { SafeAreaView, FlatList, TextInput, StyleSheet, Text, View, Image, ImageBackground, Dimensions, TouchableHighlight} from "react-native";
+import { SafeAreaView, FlatList, StyleSheet, Text, View, Image, ActivityIndicator, Dimensions, TouchableHighlight} from "react-native";
 import Header from '../components/Header'
 import Constants from 'expo-constants'
 import { Icon } from "react-native-elements";
+import {
+  BASE_URL,
+} from '../axios/config';
+const axios = require('axios').default;
+//Falta que cuando pulse el botón applications refresque y no cuando en applications le de a apply o candidate
+//Algo he avanzado.
 
 const App = (props) => {
-  const { dataJobFavorite, dataJobCandidates} = props;
-  const [dataShow, setDataShow] = useState(dataJobCandidates);
-  console.log("Application3 Favorite ", dataJobFavorite);
-  console.log("Application3 Candidate ", dataJobCandidates);
-  console.log("Application3 ------SHOW ", dataShow);
-  const [search, setSearch] = useState('');
-  const [filteredDataSource, setFilteredDataSource] = useState([]);
+  const {token} = props;
   const [masterDataSource, setMasterDataSource] = useState([]);
   const [lado, setLado]  = useState("0");
-  const [stateFounded, setStateFounded]  = useState("0");
-  //const [imagenSello, setImagenSello]  = useState("../assets/jobcandidate1.png");
+  const [lengthJobFavorite, setLengthJobFavorite]  = useState("0");
+  const [lengthJobApply, setLengthJobApply]  = useState("0");
+  const [dataJobFavoriteReload, setDataJobFavoriteReload] = useState("");  
+  const [dataJobCandidatesReload, setDataJobCandidatesReload] = useState("");  
 
   useEffect(() => {
-    if (dataShow) {
-      setMasterDataSource(dataShow)
-      setFilteredDataSource(dataShow)
-      setStateFounded(Object.keys(dataShow).length)
-    }    
-  }, [dataShow]);
+      getJobFavorites(token)
+      getJobCandidates(token)
+      if (masterDataSource.length > 0) {
+        if (lado == 1 ) {
+          setLengthJobFavorite(Object.keys(masterDataSource).length)
+        } else {
+          setLengthJobApply(Object.keys(masterDataSource).length)
+        }
+      }
 
+  }, [masterDataSource]);
+
+  const getJobFavorites = async (token) => {
+    try{
+      const response = await axios.get(BASE_URL + "favorites",
+        {
+          headers: {
+            'Authorization': `token ${token}`
+          }
+        })
+        const data = response.data;
+        setDataJobFavoriteReload(data.results);
+    } catch (error){
+      console.log("Error del favorites", error);
+    }
+  };
+  const getJobCandidates = async (token) => {
+    try{
+      const response = await axios.get(BASE_URL + "candidates",
+        {
+          headers: {
+            'Authorization': `token ${token}`
+          }
+        })
+        const data = response.data;
+        setDataJobCandidatesReload(data.results);
+        if (masterDataSource.length==0){
+          setMasterDataSource(data.results);
+        }
+    } catch (error){
+      console.log("Error del apply", error);
+    }
+  };
   const myListEmpty = () => {
     return (
       <View style={{ alignItems: "center" }}>
-      <Text style={styles.item}>No data found</Text>
+        <Text style={styles.item}>Loading</Text>
+        <ActivityIndicator size="large" color="#8325EC" />
       </View>
     );
   };
@@ -41,18 +80,18 @@ const App = (props) => {
     <View style={styles.topMenu}>
           <TouchableHighlight activeOpacity={0.6} underlayColor="#DDDDDD" onPress={()=>{
                 setLado(1);
-                setDataShow(dataJobFavorite);
+                setMasterDataSource(dataJobFavoriteReload);
                 }}>
             <Text style={{fontSize: 18,marginTop:20,fontWeight:'bold', marginRight: 15}}>
-                Favorites {stateFounded}
+                Favorites {lengthJobFavorite!=0 ? lengthJobFavorite : ""}
             </Text>  
           </TouchableHighlight>
           <TouchableHighlight activeOpacity={0.6} underlayColor="#DDDDDD" onPress={()=>{
               setLado(0);
-              setDataShow(dataJobCandidates);
+              setMasterDataSource(dataJobCandidatesReload);
                 }}> 
           <Text style={{ fontSize: 18,marginTop:20,fontWeight:'bold', marginLeft: 15}}>
-              Applied {stateFounded}
+              Applied {lengthJobApply}
           </Text> 
           </TouchableHighlight>
     </View>
@@ -61,7 +100,7 @@ const App = (props) => {
     </View>
   <SafeAreaView style={styles.containerList}>
     <FlatList
-          data={masterDataSource}
+      data={masterDataSource}
       renderItem={({ item, index }) =>
       <View  key={index} style={[styles.cardGeneric, index%3==0 ? styles.cardBlue : index%3==1 ? styles.cardGreen : styles.cardPurple]}>
         <View style={styles.itemImageV2}>
@@ -84,16 +123,16 @@ const App = (props) => {
       keyExtractor={(item, index) => index}
       //ItemSeparatorComponent={myItemSeparator}
       ListEmptyComponent={myListEmpty}
-      ListHeaderComponent={() => (
+      /*ListHeaderComponent={() => (
 
      <Text style={{ fontSize: 20,marginTop:20,fontWeight:'bold'}}>
-         Found {stateFounded} positions
-      </Text>           
+         Found {lengthJobFavorite} positions
+      </Text>        
 
-      )}
+      )} 
       ListFooterComponent={() => (
         <Text style={{ fontSize: 30, textAlign: "center",marginBottom:80,fontWeight:'bold' }}>Fin de ofertas</Text>
-      )}
+      )}*/  
     />
   </SafeAreaView>
   </View>

@@ -3,13 +3,8 @@ import {Button, StyleSheet, Text, View} from 'react-native';
 import { CheckBox } from 'react-native-elements'
 import {Picker} from '@react-native-picker/picker';
 
-type Props = {
-  onPress: () => any;
-  
-};
 const DefaultModalContent = (props) => {
     const [checkedMadrid, setCheckedJornada] = useState(props.tipoMadrid);  
-    console.log("Entra en el checked Madrid", checkedMadrid); 
     const [selectedValue, setSelectedValue] = useState(props.tipoJornada);
     useEffect(() => {
       props.parentTipoJornada(selectedValue);
@@ -18,7 +13,6 @@ const DefaultModalContent = (props) => {
 
   const checkfunctionMadrid = () => {
     setCheckedJornada(!checkedMadrid);
-    console.log("Entra en el checked Madrid", checkedMadrid);
     //return checkedMadrid;
   };
   return (

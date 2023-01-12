@@ -67,10 +67,10 @@ const LogInScreen = ({navigation}) => {
   }, [userToken, userInfo]);
   
   const onPress = () => {
-    setLoadingVisible(!isLoadingVisible);
+    //setLoadingVisible(!isLoadingVisible);
     getToken();
   };
-  const [isLoadingVisible, setLoadingVisible] = useState(false);
+  //const [isLoadingVisible, setLoadingVisible] = useState(false);
 
   const getToken = async () => {
     try{

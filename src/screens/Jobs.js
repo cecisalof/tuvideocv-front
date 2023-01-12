@@ -1,22 +1,20 @@
 import { useState, useEffect } from 'react';
 import React from "react";
-import { SafeAreaView, FlatList, TextInput, Button, StyleSheet, Text, View, Image, ToastAndroid, ImageBackground, Dimensions, TouchableHighlight, TouchableOpacity} from "react-native";
+import { SafeAreaView, FlatList, TextInput, StyleSheet, Text, View, Image, ToastAndroid, Dimensions, TouchableOpacity} from "react-native";
 import Header from '../components/Header'
 import Constants from 'expo-constants'
 import { Icon } from "react-native-elements";
 import Modal from "react-native-modal";
 import DefaultModalContent from '../components/DefaultModalContent';
 import DefaultModalContentOptions from '../components/DefaultModalContentOptions';
-import { EndOfLineState } from 'typescript';
 import {
-  API_URL, BASE_URL,
+  BASE_URL,
 } from '../axios/config';
 
 const axios = require('axios').default;
 
 const App = (props) => {
   const { data, token } = props;
-  //console.log("ApplicationJobs", data);
   const [search, setSearch] = useState('');
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [masterDataSource, setMasterDataSource] = useState([]);
@@ -49,32 +47,6 @@ const App = (props) => {
   }, [modalVarMadrid]);
   useEffect(() => { 
   }, [itemUUID]);
-  /*useEffect(() => {
-    console.log("Entra en el useEffect ------------------------------Favorite-Candidate");
-    if (itemSelectedModalOptions == "Favorite"){ //Seleccionar el id de la tarjeta que estas pulsando para poder mandarlo.
-      addFavorite();
-      //https://03kn1e2eb5.execute-api.eu-west-1.amazonaws.com/pro/api/jobs/95913257-f212-4840-9076-ebf76f949beb/favorite
-    } else if (itemSelectedModalOptions == "Candidate"){
-      addCandidature();
-    } else if (itemSelectedModalOptions == "Nothing"){
-    }     
-  }, [itemSelectedModalOptions]);*/
-    /*useEffect(() => {
-    console.log("Entra en el useEffect ------------------------------Favorite-Candidate ", itemSelectedChanged);
-    console.log("Entra en el useEffectTIPO ------------------------------Favorite-Candidate ", itemSelectedModalOptions);
-
-    if (itemSelectedModalOptions == "Favorite" && itemSelectedChanged == true){ //Seleccionar el id de la tarjeta que estas pulsando para poder mandarlo.
-      console.log("DENTRO DE ADD FAVORITE");
-      addFavorite();
-      //https://03kn1e2eb5.execute-api.eu-west-1.amazonaws.com/pro/api/jobs/95913257-f212-4840-9076-ebf76f949beb/favorite
-    } else if (itemSelectedModalOptions == "Candidate" && itemSelectedChanged == true){
-      console.log("DENTRO DE ADD APPLY CANDIDATE");
-      addCandidature();
-    } 
-    setItemSelectedChanged(false);
-  }, [itemSelectedChanged]);*/
-
-
 
   const searchFilterFunction = (text) => {
     // Check if searched text is not blank
@@ -103,55 +75,38 @@ const App = (props) => {
     }
   };
   const addFavorite = async () => {
-
-      console.log("El token en jobs favorite es "+token);
-      console.log("LA URL ES  "+BASE_URL + "jobs/"+itemUUID+"/favorite");
-      //const response = await axios.post(BASE_URL + "jobs/95913257-f212-4840-9076-ebf76f949beb/favorite",
-      //const response = await axios.post("https://03kn1e2eb5.execute-api.eu-west-1.amazonaws.com/pro/api/jobs/95913257-f212-4840-9076-ebf76f949beb/favorite", "",
       const response = await axios.post(BASE_URL + "jobs/"+itemUUID+"/favorite", "",
         {
           headers: {
             'Authorization': `token ${token}`
           }
         }).then(function (response) {
-          console.log(response);
           const data = response.data;
-          console.log("**JOB FAVORITE** "+data);
           ToastAndroid.show("¡Agregado correctamente a favoritos!", ToastAndroid.SHORT);
         })
         .catch(function (error) {
-          console.log(error);
           console.log("Error del favorites", error);
           ToastAndroid.show("Ha sucedido un error", ToastAndroid.SHORT);
         });
   };
 
   const addCandidature = async () => {
-      //const response = await axios.get(BASE_URL + "jobs/"+item.UUID+"/favorite",
-      //const response = await axios.post(BASE_URL + "jobs/95913257-f212-4840-9076-ebf76f949beb/apply", "",
       const response = await axios.post(BASE_URL + "jobs/"+itemUUID+"/apply", "",
         {
           headers: {
             'Authorization': `token ${token}`
           }
         }).then(function (response) {
-          console.log(response);
           const data = response.data;
-          console.log("**JOB CANDIDATE** "+data);
           ToastAndroid.show("¡Agregado correctamente a candidaturas!", ToastAndroid.SHORT);
         })
         .catch(function (error) {
-          console.log(error);
           console.log("Error del candidaturas", error);
           ToastAndroid.show("Ha sucedido un error", ToastAndroid.SHORT);
         });
   };
 
   const searchFilterFunctionModalDialogJornada = (text) => {
-    // Check if searched text is not blank
-    //if (text) { //Crear un botón de borrar en el dialog.
-      // Inserted text is not blank
-      // Filter the masterDataSource and update FilteredDataSource
       const newData = masterDataSource.filter(function (item) {
         var itemData = "";
         var textData="";
@@ -172,57 +127,31 @@ const App = (props) => {
       });
       setStateFounded(newData.length);
       setFilteredDataSource(newData);
-      //setSearch(modalVarTipoJornada);
-   /* } else {
-      // Inserted text is blank
-      // Update FilteredDataSource with masterDataSource
-      setStateFounded(numeroOriginal);
-      setFilteredDataSource(masterDataSource);
-      setSearch(text);
-    }*/
   };
   const [isModalVisible, setModalVisible] = useState(false);
   const [isModalVisibleOptions, setModalVisibleOptions] = useState(false);
 
   const toggleModal = () => {
-    console.log("Entra en toggle modal", isModalVisible);
     setModalVisible(!isModalVisible); 
   };
   const toggleModalOptions = () => {
-    console.log("Entra en toggle toggleModalOptions", isModalVisibleOptions);
     setModalVisibleOptions(!isModalVisibleOptions);
     //setIdJob = idEmpleo;
   };
   const toggleModalOptionsPressed = (childData) => {
-    console.log("Entra en PRESSED y el modal1 es ", itemSelectedChanged);
     setModalVisibleOptions(!isModalVisibleOptions);
     setItemSelectedChanged(true);
     setItemSelectedModalOptions(childData);
-    console.log("Entra en PRESSED y el modal2 es ", childData);
-    if (childData == "Favorite"){ //Seleccionar el id de la tarjeta que estas pulsando para poder mandarlo.
-      console.log("DENTRO DE ADD FAVORITE");
+    if (childData == "Favorite"){ 
       addFavorite();
-      //https://03kn1e2eb5.execute-api.eu-west-1.amazonaws.com/pro/api/jobs/95913257-f212-4840-9076-ebf76f949beb/favorite
     } else if (childData == "Candidate"){
-      console.log("DENTRO DE ADD APPLY CANDIDATE");
       addCandidature();
     } 
-    //setIdJob = idEmpleo;
   };
   const toggleModalOptionsUUID = (uuid) => {
-    console.log("Entra en toggle toggleModalOptions", isModalVisibleOptions);
-    console.log("Entra en el uuid del toggleModal", uuid);
     setItemUUID(uuid);
-    console.log("Entra en el itemUUID del toggleModal", itemUUID); //N
-    //También mirar que no funciona el link base de codepremium al hacer la llamada (y sustituir el de amazon) TODO
     setModalVisibleOptions(!isModalVisibleOptions);
-    //setIdJob = idEmpleo;
   };
- /* const itemSelectedFromModalOptions = (childData) => {
-    console.log("Entra in itemSelectedFromModalOptions BEFORE "+itemSelectedModalOptions);
-    console.log("Entra in itemSelectedFromModalOptions "+childData);
-    setItemSelectedModalOptions(childData); 
-  };*/
   const myListEmpty = () => {
     return (
       <View style={{ alignItems: "center" }}>
@@ -230,13 +159,7 @@ const App = (props) => {
       </View>
     );
   };
-  const onPressLearnMore = () => {
-    console.log("CheckValores", "CheckValoresModal");
-    console.log("Valor Picker Tipo jornada", modalVarTipoJornada);
-    console.log("Valor Madrid", modalVarMadrid);
-  };
   const callbackTipoJornada = (childData) => {
-    console.log("Entra tipo jornada", "Entra tipo jornada");
     setModalVarTipoJornada(childData);
     //searchFilterFunctionModalDialog();
   };
