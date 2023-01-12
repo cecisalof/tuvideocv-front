@@ -5,6 +5,7 @@ import {
 import CustomTabBar from '../components/CustomTabBar'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Jobs from './Jobs'
+import Main from './Main'
 import MyApplications from './MyApplications'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { Camera, CameraType } from 'expo-camera';
@@ -63,7 +64,7 @@ const HomeScreen = ({ navigation, route }) => {
   }
   function PerfilScreenF() {
     return (
-    <Jobs data={data}/> //Poner el layout que corresponda
+    <Main route={route} /> //Poner el layout que corresponda
     //<MyApplications />
     );
   }
