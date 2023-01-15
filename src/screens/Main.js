@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import {
   API_URL, BASE_URL,
 } from '../axios/config';
-import { View, Text, StyleSheet, Image, ImageBackground, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, Image, ImageBackground } from 'react-native';
 import { PrimaryButton } from '../styles/button';
-import { LinearGradient } from 'expo-linear-gradient';
+
 
 const axios = require('axios').default;
 
@@ -33,20 +33,6 @@ const MainScreen = ({ navigation, route }) => {
 
 const onPress = () => {
   navigation.navigate('CV', { 
-    uuid: uuid, 
-    token: token
-   })
-};
-
-const onPressJobs= () => {
-  navigation.navigate('JobsList', { 
-    uuid: uuid, 
-    token: token
-   })
-};
-
-const onPressHome= () => {
-  navigation.navigate('Home', { 
     uuid: uuid, 
     token: token
    })
