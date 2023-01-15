@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, StyleSheet, Text, Image } from 'react-native';
+import { View, TextInput, StyleSheet, Text, Image, AsyncStorageStatic, ActivityIndicator } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import {
   API_URL, BASE_URL,
@@ -7,7 +7,8 @@ import {
 import { PrimaryButton } from '../styles/button';
 import Context from '../../contexts/context';
 import { useContext } from 'react';
- 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const axios = require('axios').default;
 
 const LogInScreen = ({navigation}) => {
@@ -18,14 +19,32 @@ const LogInScreen = ({navigation}) => {
   const [userInfo, setUserInfo] = useState({});
   console.log(userInfo);
   const userData = useContext(Context);
-
+  
+  _storeData = async () => {
+    try {
+      await AsyncStorage.setItem(
+        'SessionLogged',
+        'true'
+      );
+      await AsyncStorage.setItem(
+        'userToken',
+        userToken
+      );
+      console.log("Se guarda el login del usuario")
+    } catch (error) {
+      console.log("No se ha podido guardar el login del usuario")
+      // Error saving data
+    }
+  };
   useEffect(() => {
     if(userToken && userToken.length > 0){
       if(userInfo && userInfo.uuid){
+        console.log("Entra en el doble if de login.js")
         //TO DO SAVE USER LOGEED DATA
         // userData.saveToken(userToken)
 
         // User is properly looged in
+      _storeData();
       navigation.dispatch(
           CommonActions.reset({
             index: 0,
@@ -50,25 +69,29 @@ const LogInScreen = ({navigation}) => {
   }, [userToken, userInfo]);
   
   const onPress = () => {
+    //setLoadingVisible(!isLoadingVisible);
     getToken();
   };
-
+  //const [isLoadingVisible, setLoadingVisible] = useState(false);
 
   const getToken = async () => {
-    const response = await axios.post(BASE_URL + API_URL.LOGIN,
-      {
-        email: email,
-        password: password
-      })
     try{
+      const response = await axios.post(BASE_URL + API_URL.LOGIN,
+        {
+          email: email,
+          password: password
+        })
       const data = response.data;
       setUserInfo(data);
       setUserToken(data.token);
     } catch (error){
-      console.log(error);
+      console.log("Entra en error Login");
+      console.log(error.response.data);
     }
+
  };
 
+ //<ActivityIndicator size="large" color="#8325EC" /> Loading circle
 
   return (
     <View style={styles.container}>
@@ -79,7 +102,8 @@ const LogInScreen = ({navigation}) => {
         </View>
         <TextInput
           value={email}
-          onChangeText={(email) => setEmail(email.toLowerCase().trim())}
+          //onChangeText={(email) => setEmail(email.toLowerCase().trim())}
+          onChangeText={(email) => setEmail("aaaa@gmail.com")}
           placeholder={'Email'}
           style={styles.input}
           keyboardType={'email-address'}
@@ -89,7 +113,8 @@ const LogInScreen = ({navigation}) => {
         />
         <TextInput
           value={password}
-          onChangeText={(password) => setPassword(password.trim())}
+          //onChangeText={(password) => setPassword(password.trim())}
+          onChangeText={(password) => setPassword("123Adri456")}
           placeholder={'Contraseña'}
           secureTextEntry={true}
           style={styles.input}

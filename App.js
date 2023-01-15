@@ -3,9 +3,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import SplashScreen from './src/screens/Splash';
 import LogInScreen from './src/screens/Login';
 import SignUpScreen from './src/screens/Signup';
-import HomeScreen from './src/screens/Home';
+import MainScreen from './src/screens/Main';
 import CVScreen from './src/screens/CV';
-import JobsListScreen from './src/screens/JobsList';
+import HomeScreen from './src/screens/Home';
+import JobScreen from './src/screens/Jobs';
+import MyApplicationsScreen from './src/screens/MyApplications';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import UserState from './contexts/UserState';
 
@@ -19,9 +21,11 @@ function App() {
           <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="Login" component={LogInScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="Signup" component={SignUpScreen} options={{ headerShown: false }}/>
-          <Stack.Screen name="JobsList" component={JobsListScreen} options={{ headerShown: false }}/>
-          <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="CV" component={CVScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="Main" component={MainScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="Jobs" component={JobScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="MyApplications" component={MyApplicationsScreen} options={{ headerShown: false }}/>
         </Stack.Navigator>
       </UserState>
     </NavigationContainer>
