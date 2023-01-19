@@ -4,15 +4,23 @@ import { View, Text, StyleSheet, SafeAreaView} from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import { Video } from 'expo-av';
 import { PrimaryButton } from '../styles/button';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 // import * as Sharing from 'expo-sharing';
+
 const axios = require('axios').default;
+
 import {
-  API_URL, BASE_URL,
+  API_URL, BASE_URL_VIDEOS
 } from '../axios/config';
+import Context from '../../contexts/context';
+import { useContext } from 'react';
 
-const CVScreen = ({ navigation, route}) => {
+const CVScreen = ({ route}) => {
   const { uuid, token } = route.params;
-
+ 
+  // userData from Context
+  const userData = useContext(Context);
+  
   let cameraRef = useRef();
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasMicrophonePermission, setHasMicrophonePermission] = useState();
@@ -35,10 +43,60 @@ const CVScreen = ({ navigation, route}) => {
       setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
     })();
     if (video) {
-      console.log(video.uri);
       setVideoUri(video.uri)
     }
   }, [video]);
+
+  useEffect(() => {
+    if (videoUri) {
+      // videoToBlob(videoUri);
+    }
+  }, [videoUri])
+
+
+
+    // utitlity function to convert BLOB to BASE64
+    // const blobToBase64 = (blob) => {
+    //   console.log(blob);
+    //   const reader = new FileReader();
+    //   // console.log('READER', reader);
+    //   // reader.readAsDataURL(blob);
+    //   // console.log();
+    //   // console.log('reader.readAsDataURL(blob)', reader.readAsDataURL(blob));
+    //   return new Promise((resolve) => {
+    //     reader.onloadend = () => {
+    //       resolve(reader.result);
+    //     };
+    //   });
+    // };
+
+
+  // const videoToBlob = async (videoUrl) => {
+  //   console.log('videoUrl',  videoUrl);
+  //   const blob = await new Promise((resolve, reject) => {
+  //     const xhr = new XMLHttpRequest();
+  //     xhr.onload = function () {
+  //       console.log(xhr.response);
+  //     };
+  //     // xhr.onreadystatechange = () => {
+  //     //   if (xhr.readyState === 4) {
+  //     //     console.log('here!');
+  //     //       resolve(xhr.response);
+  //     //   }
+  //     // };
+  //     xhr.onerror = function (e) {
+  //       reject(new TypeError("Network request failed"));
+  //     };
+  //     xhr.responseType = "blob";
+  //     xhr.open("PATCH", videoUrl, true);
+  //     xhr.send(null);
+  // })
+    // const videoBase64 = await blobToBase64(blob);
+    // console.log('videoBase64', videoBase64);
+
+  //   // We're done with the blob and file uploading, close and release it
+  //   blob.close()
+  // };
 
   const requestPermission = () => {
     setHasCameraPermission(cameraPermission.status === 'granted');
@@ -64,6 +122,7 @@ const CVScreen = ({ navigation, route}) => {
   const recordVideo = async () => {
     setIsRecording(true);
     let options = {
+      // set max duration
       maxDuration: 60,
       mute: false
     };
@@ -75,83 +134,55 @@ const CVScreen = ({ navigation, route}) => {
 
   const stopRecording = async () => {
     setIsRecording(false);
-    
-    // utitlity function to convert BLOB to BASE64
-    const blobToBase64 = (blob) => {
-      const reader = new FileReader();
-      console.log('READER', reader);
-      reader.readAsDataURL(blob);
-      console.log();
-      console.log('reader.readAsDataURL(blob)', reader.readAsDataURL(blob));
-      return new Promise((resolve) => {
-        reader.onloadend = () => {
-          resolve(reader.result);
-        };
-      });
-    };
-    
-    // // Fetch VIDEO binary blob data
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      console.log('xhr', xhr);
-      // xhr.onload = function () {
-      //   resolve(xhr.response);
-      // };
-      xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4) {
-            resolve(xhr.response);
-        }
-      };
-      xhr.onerror = function (e) {
-        reject(new TypeError("Network request failed"));
-      };
-      xhr.responseType = "blob";
-      console.log(videoUri);
-      xhr.open("GET", videoUri, true);
-      xhr.send(null);
-    });
-    const videoBase64 = await blobToBase64(blob);
-    console.log('videoBase64', videoBase64);
-
     setVideo(video);
     cameraRef.current.stopRecording();
-
-    // We're done with the blob and file uploading, close and release it
-    // blob.close()
   }
-
 
   if (video) { 
     let saveVideo = async () => {
+      // Saving video in redux
+      // userData.saveUserVideoToMemory(video.uri);
+      // const value = await AsyncStorage.setItem(
+      //   'video',
+      //   JSON.stringify(video.uri)
+      // );
+      // console.log('value', value);
       MediaLibrary.saveToLibraryAsync(video.uri).then(() => {
         setVideo(undefined);
       });
+      // PATCH REQUEST
+      sendVideo();
+    };
 
-      const response = await axios.patch(BASE_URL + API_URL.USER + uuid, 
-        {
-          headers: {
-            'Authorization': `token ${token}`
-          },
-        },
-        {
-          "name": "Cecilia",
-          "country": "PRUEBA",
-          "address": "PRUEBA",
-          "bio": "Front End Dev from frontend",
-          "surname": "Losada FFFFFFFF",
-          "video_cv": null,
-          "created_at": "2022-10-06T13:54:23.938522Z",
-          "updated_at": "2022-12-20T14:30:15.665825Z"
-        }
-      );
+    let formdata = new FormData();
+    formdata.append("video_cv", videoUri);
+    console.log('FORM DATA', formdata);
+
+
+    const sendVideo = async () => {
+      console.log('sending video', uuid);
+
       try {
+        const response = await axios.patch(BASE_URL_VIDEOS + API_URL.USER + uuid, formdata,
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+              'Content-Type': 'multipart/form-data; boundary=\"--\"/',
+            },
+          })
         const data = response.data;
         console.log('data', data);
       } catch (error) {
-        console.log(error);
+        if (error.response) {
+          console.log('Error', error);
+          console.log('response.data', error.response.data);
+          console.log('status', error.response.status);
+          console.log('headers', error.response.headers);
+        }
+        console.log(error.request);
       }
     };
-    
+
   return (
     <SafeAreaView style={styles.container}>
         <Video
@@ -159,7 +190,7 @@ const CVScreen = ({ navigation, route}) => {
           source={{uri: video.uri}}
           useNativeControls
           resizeMode='contain'
-          isLooping
+          isLooping={false}
           onPlaybackStatusUpdate={status => setStatus(() => status)}
         />
         {hasMediaLibraryPermission ? <PrimaryButton title="Guardar" onPress={saveVideo} /> : undefined}
