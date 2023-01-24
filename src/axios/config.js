@@ -1,6 +1,7 @@
 
 //export const BASE_URL = 'https://03kn1e2eb5.execute-api.eu-west-1.amazonaws.com/pro/api/'; 
-export const BASE_URL = 'https://tuvideocv.codepremium.es/api/'; 
+export const BASE_URL = 'https://tuvideocv.codepremium.es/api/';
+export const BASE_URL_VIDEOS = 'https://server.tuvideocv.codepremium.es/api/';
 
 export const API_URL = {
     SIGNUP: 'signup/',

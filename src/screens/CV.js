@@ -4,16 +4,11 @@ import { View, Text, StyleSheet, SafeAreaView} from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import { Video } from 'expo-av';
 import { PrimaryButton } from '../styles/button';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-// import * as Sharing from 'expo-sharing';
-
-const axios = require('axios').default;
 
 import {
   API_URL, BASE_URL_VIDEOS
 } from '../axios/config';
-import Context from '../../contexts/context';
-import { useContext } from 'react';
+
 
 const CVScreen = ({ route}) => {
   const { uuid, token } = route.params;
@@ -25,7 +20,6 @@ const CVScreen = ({ route}) => {
   const [isRecording, setIsRecording] = useState(false);
   const [video, setVideo] = useState();
   const [videoUri, setVideoUri] = useState('');
-  const [status, setStatus] = React.useState({});
   
   const [type, setType] = useState(CameraType.back);
   
@@ -106,11 +100,7 @@ const CVScreen = ({ route}) => {
     
     formData.append('video_cv', { uri: videoUri, name: fileName, type: `video/${fileFormat}` })
 
-
-
     const sendVideo = async () => {
-      console.log('sending data', formData);
-
       try {
         const response = await axios.patch(BASE_URL_VIDEOS + API_URL.USER + uuid, formData,
           {
