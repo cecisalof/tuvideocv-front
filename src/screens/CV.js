@@ -4,17 +4,20 @@ import { View, Text, StyleSheet, SafeAreaView} from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import { Video } from 'expo-av';
 import { PrimaryButton } from '../styles/button';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 // import * as Sharing from 'expo-sharing';
+
 const axios = require('axios').default;
+
 import {
-  API_URL, BASE_URL,
+  API_URL, BASE_URL_VIDEOS
 } from '../axios/config';
+import Context from '../../contexts/context';
+import { useContext } from 'react';
 
-const CVScreen = ({ navigation, route}) => {
+const CVScreen = ({ route}) => {
   const { uuid, token } = route.params;
-  console.log(uuid);
-  console.log(token);
-
+ 
   let cameraRef = useRef();
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasMicrophonePermission, setHasMicrophonePermission] = useState();
@@ -37,10 +40,14 @@ const CVScreen = ({ navigation, route}) => {
       setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
     })();
     if (video) {
-      console.log(video.uri);
       setVideoUri(video.uri)
     }
   }, [video]);
+
+  useEffect(() => {
+    if (videoUri) {
+    }
+  }, [videoUri])
 
   const requestPermission = () => {
     setHasCameraPermission(cameraPermission.status === 'granted');
@@ -66,6 +73,7 @@ const CVScreen = ({ navigation, route}) => {
   const recordVideo = async () => {
     setIsRecording(true);
     let options = {
+      // set max duration
       maxDuration: 60,
       mute: false
     };
@@ -75,35 +83,52 @@ const CVScreen = ({ navigation, route}) => {
     });
   }
 
-  const stopRecording = () => {
+  const stopRecording = async () => {
     setIsRecording(false);
     setVideo(video);
     cameraRef.current.stopRecording();
   }
 
-
   if (video) { 
     let saveVideo = async () => {
+
       MediaLibrary.saveToLibraryAsync(video.uri).then(() => {
         setVideo(undefined);
       });
-      const response = await axios.patch(BASE_URL + API_URL.USER + uuid, 
-        {
-          headers: {
-            'Authorization': 'Token' + ' ' + token
-          }
-        },
-        // {
-        //   'video_cv': ''
-        // }
-        )
-      try{
+      // PATCH REQUEST
+      sendVideo();
+    };
+    
+    let formData = new FormData();
+
+    let fileFormat = videoUri.substring(videoUri.lastIndexOf(".") + 1);
+    let fileName = videoUri.substring(videoUri.lastIndexOf("/")+ 1);
+    
+    formData.append('video_cv', { uri: videoUri, name: fileName, type: `video/${fileFormat}` })
+
+
+
+    const sendVideo = async () => {
+      console.log('sending data', formData);
+
+      try {
+        const response = await axios.patch(BASE_URL_VIDEOS + API_URL.USER + uuid, formData,
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+              'Content-Type': 'multipart/form-data',
+            },
+          })
         const data = response.data;
-        console.log('data', data);
-      } catch (error){
-        console.log(error);
+        console.log('data post request', data);
+      } catch (error) {
+        if (error.response) {
+          console.log('Error', error);
+        }
+        console.log(error.request);
       }
     };
+
   return (
     <SafeAreaView style={styles.container}>
         <Video
@@ -111,7 +136,7 @@ const CVScreen = ({ navigation, route}) => {
           source={{uri: video.uri}}
           useNativeControls
           resizeMode='contain'
-          isLooping
+          isLooping={false}
           onPlaybackStatusUpdate={status => setStatus(() => status)}
         />
         {hasMediaLibraryPermission ? <PrimaryButton title="Guardar" onPress={saveVideo} /> : undefined}
@@ -133,7 +158,7 @@ const CVScreen = ({ navigation, route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
     justifyContent: 'flex-end',
     backgroundColor: "transparent",
   },
