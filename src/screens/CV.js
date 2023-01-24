@@ -9,6 +9,7 @@ import {
   API_URL, BASE_URL_VIDEOS
 } from '../axios/config';
 
+const axios = require('axios');
 
 const CVScreen = ({ route}) => {
   const { uuid, token } = route.params;
@@ -20,6 +21,7 @@ const CVScreen = ({ route}) => {
   const [isRecording, setIsRecording] = useState(false);
   const [video, setVideo] = useState();
   const [videoUri, setVideoUri] = useState('');
+  const [status, setStatus] = React.useState({});
   
   const [type, setType] = useState(CameraType.back);
   
@@ -112,10 +114,12 @@ const CVScreen = ({ route}) => {
         const data = response.data;
         console.log('data post request', data);
       } catch (error) {
+        console.log('Error', error);
         if (error.response) {
-          console.log('Error', error);
+          console.log('response data', error.response.data);
+          console.log('response satatus', error.response.status);
         }
-        console.log(error.request);
+        console.log('error request', error.request);
       }
     };
 

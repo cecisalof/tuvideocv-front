@@ -8,10 +8,9 @@ import Jobs from './Jobs'
 import Main from './Main'
 import MyApplications from './MyApplications'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { Camera, CameraType } from 'expo-camera';
 import { StyleSheet} from 'react-native';
 
-const axios = require('axios').default;
+const axios = require('axios');
 
 const HomeScreen = ({ navigation, route }) => {
   const [token, setToken] = useState("Loading");
@@ -51,7 +50,6 @@ const HomeScreen = ({ navigation, route }) => {
       const data = response.data;
       setData(data.results);
     } catch (error){
-      console.log("Entra en error Home");
       console.log(error.response.data);
     }
   };
@@ -64,8 +62,7 @@ const HomeScreen = ({ navigation, route }) => {
   }
   function PerfilScreenF() {
     return (
-    <Main route={route} navigation={navigation}/> //Poner el layout que corresponda
-    //<MyApplications />
+    <Main route={route} navigation={navigation}/>
     );
   }
   function MyAppScreen() {

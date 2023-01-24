@@ -6,7 +6,7 @@ import {
   API_URL, BASE_URL,
 } from '../axios/config';
 
-const axios = require('axios').default;
+const axios = require('axios');
 
 const SignUpScreen = ( {navigation} ) => {
   const [email, setEmail] = useState("");
@@ -43,7 +43,6 @@ const SignUpScreen = ( {navigation} ) => {
       setUserInfo(data);
       setUserToken(data.token);
     } catch (error){
-      console.log("Entra en error SignUp");
       console.log(error);
     }
   };

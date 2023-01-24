@@ -7,7 +7,8 @@ export default class UserState extends React.Component{
   state = {
     userData: {},
     token: '',
-    uuid: ''
+    uuid: '',
+    video: ''
   }
   
   removeUser = () => {
@@ -27,9 +28,7 @@ export default class UserState extends React.Component{
   readFromMemory = async (callback) => {
     try{
       let storedValues = await AsyncStorage.getItem('userData');
-      // console.log('stored', storedValues)
       storedValues = JSON.parse(storedValues)
-      // console.log('parsed', storedValues)
       this.setState(storedValues);
       callback && callback(storedValues)
     } catch(error) { 
@@ -39,14 +38,8 @@ export default class UserState extends React.Component{
   };
 
   saveToMemory = async () => {
-    console.log('se va a guardar...', this.state)
     await AsyncStorage.setItem('userData', JSON.stringify(this.state));
   };
-
-  // saveToken = async () => {
-  //   console.log('se va a guardar...', this.state.token)
-  //   await AsyncStorage.setItem('userToken', JSON.stringify(this.state.token));
-  // };
 
   render(){
   return (
@@ -58,7 +51,7 @@ export default class UserState extends React.Component{
           updateUserData: this.updateUserData,
           updateToken: this.updateToken,
           readFromMemory: this.readFromMemory,
-          saveToMemory: this.saveToMemory, 
+          saveToMemory: this.saveToMemory,
           saveToken: this.saveToken
       }}
     >

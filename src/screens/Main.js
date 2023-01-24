@@ -7,8 +7,7 @@ import { PrimaryButton } from '../styles/button';
 import Context from '../../contexts/context';
 import { useContext } from 'react';
 
-
-const axios = require('axios').default;
+const axios = require('axios');
 
 const MainScreen = ({ navigation, route }) => {
   const { uuid, token }= route.params;

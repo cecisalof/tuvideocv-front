@@ -11,7 +11,7 @@ import {
   BASE_URL,
 } from '../axios/config';
 
-const axios = require('axios').default;
+const axios = require('axios');
 
 const App = (props) => {
   const { data, token } = props;

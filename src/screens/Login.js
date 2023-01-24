@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, StyleSheet, Text, Image, AsyncStorageStatic, ActivityIndicator } from 'react-native';
+import { View, TextInput, StyleSheet, Text, Image } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import {
   API_URL, BASE_URL,
 } from '../axios/config';
 import { PrimaryButton } from '../styles/button';
-import Context from '../../contexts/context';
-import { useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const axios = require('axios').default;
+const axios = require('axios');
 
 const LogInScreen = ({navigation}) => {
   const [email, setEmail] = useState("");
@@ -17,8 +15,7 @@ const LogInScreen = ({navigation}) => {
   const [userToken, setUserToken] = useState("");
   // userInfo includes uuid
   const [userInfo, setUserInfo] = useState({});
-  console.log(userInfo);
-  const userData = useContext(Context);
+  // const userData = useContext(Context);
   
   _storeData = async () => {
     try {
@@ -85,7 +82,6 @@ const LogInScreen = ({navigation}) => {
       setUserInfo(data);
       setUserToken(data.token);
     } catch (error){
-      console.log("Entra en error Login");
       console.log(error.response.data);
     }
 

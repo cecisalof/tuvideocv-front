@@ -7,7 +7,9 @@ import { Icon } from "react-native-elements";
 import {
   BASE_URL,
 } from '../axios/config';
-const axios = require('axios').default;
+
+const axios = require('axios');
+
 //Falta que cuando pulse el botón applications refresque y no cuando en applications le de a apply o candidate
 //Algo he avanzado.
 
