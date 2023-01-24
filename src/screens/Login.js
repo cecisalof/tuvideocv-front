@@ -65,7 +65,14 @@ const LogInScreen = ({navigation}) => {
       } 
     }
   }, [userToken, userInfo]);
-  
+  const onPressSignUp = () => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: 'Signup'}],
+      })
+    )
+  };
   const onPress = () => {
     //setLoadingVisible(!isLoadingVisible);
     getToken();
@@ -122,6 +129,12 @@ const LogInScreen = ({navigation}) => {
           <PrimaryButton
             title='Iniciar sesión'
             onPress={onPress}
+          />
+        </View>
+        <View style={styles.btnContainerStyle}>
+          <PrimaryButton
+            title='Registrarse'
+            onPress={onPressSignUp}
           />
         </View>
       </View>

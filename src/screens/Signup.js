@@ -9,11 +9,11 @@ import {
 const axios = require('axios').default;
 
 const SignUpScreen = ( {navigation} ) => {
+  const [userName, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userToken, setUserToken] = useState("");
   const [userInfo, setUserInfo] = useState({})
-  console.log("Hola hola",userInfo);
 
   useEffect(() => {
   
@@ -22,7 +22,7 @@ const SignUpScreen = ( {navigation} ) => {
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
-          routes: [{ name: 'Home' }],
+          routes: [{ name: 'Login' }],
         })
       )
     }
@@ -36,6 +36,7 @@ const SignUpScreen = ( {navigation} ) => {
     try{
       const response = await axios.post(BASE_URL + API_URL.SIGNUP,
         {
+          name: userName,
           email: email,
           password: password
         })
@@ -51,6 +52,13 @@ const SignUpScreen = ( {navigation} ) => {
   return (
     <View style={styles.container}>
       <View>
+      <TextInput
+          value={userName}
+          onChangeText={(userName) => setName(userName.trim())}
+          placeholder={'Nombre'}
+          secureTextEntry={false}
+          style={styles.input}
+        />
         <TextInput
           value={email}
           onChangeText={(email) => setEmail(email.toLowerCase().trim())}
