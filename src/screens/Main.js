@@ -4,6 +4,8 @@ import {
 } from '../axios/config';
 import { View, Text, StyleSheet, Image, ImageBackground } from 'react-native';
 import { PrimaryButton } from '../styles/button';
+import Context from '../../contexts/context';
+import { useContext } from 'react';
 
 
 const axios = require('axios').default;
@@ -12,8 +14,13 @@ const MainScreen = ({ navigation, route }) => {
   const { uuid, token }= route.params;
   const [data, setData] = useState("");
 
+   // userData from Context
+   const userData = useContext(Context);
+
   useEffect(() => {
     getUser();
+    // read from memory
+    getData();
   }, []);
 
   const getUser = async () => {
@@ -30,6 +37,15 @@ const MainScreen = ({ navigation, route }) => {
       console.log(error);
     }
   };
+
+  // Getting video Uri from memory
+  const getData = async () => {
+    userData.readFromMemory(() => {
+      if (userData.video != null){
+        console.log('video from data', userState.video);
+      }
+    });
+  }
 
 const onPress = () => {
   navigation.navigate('CV', { 

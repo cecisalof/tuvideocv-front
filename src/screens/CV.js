@@ -18,9 +18,6 @@ import { useContext } from 'react';
 const CVScreen = ({ route}) => {
   const { uuid, token } = route.params;
  
-  // userData from Context
-  const userData = useContext(Context);
-  
   let cameraRef = useRef();
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasMicrophonePermission, setHasMicrophonePermission] = useState();
@@ -49,54 +46,8 @@ const CVScreen = ({ route}) => {
 
   useEffect(() => {
     if (videoUri) {
-      // videoToBlob(videoUri);
     }
   }, [videoUri])
-
-
-
-    // utitlity function to convert BLOB to BASE64
-    // const blobToBase64 = (blob) => {
-    //   console.log(blob);
-    //   const reader = new FileReader();
-    //   // console.log('READER', reader);
-    //   // reader.readAsDataURL(blob);
-    //   // console.log();
-    //   // console.log('reader.readAsDataURL(blob)', reader.readAsDataURL(blob));
-    //   return new Promise((resolve) => {
-    //     reader.onloadend = () => {
-    //       resolve(reader.result);
-    //     };
-    //   });
-    // };
-
-
-  // const videoToBlob = async (videoUrl) => {
-  //   console.log('videoUrl',  videoUrl);
-  //   const blob = await new Promise((resolve, reject) => {
-  //     const xhr = new XMLHttpRequest();
-  //     xhr.onload = function () {
-  //       console.log(xhr.response);
-  //     };
-  //     // xhr.onreadystatechange = () => {
-  //     //   if (xhr.readyState === 4) {
-  //     //     console.log('here!');
-  //     //       resolve(xhr.response);
-  //     //   }
-  //     // };
-  //     xhr.onerror = function (e) {
-  //       reject(new TypeError("Network request failed"));
-  //     };
-  //     xhr.responseType = "blob";
-  //     xhr.open("PATCH", videoUrl, true);
-  //     xhr.send(null);
-  // })
-    // const videoBase64 = await blobToBase64(blob);
-    // console.log('videoBase64', videoBase64);
-
-  //   // We're done with the blob and file uploading, close and release it
-  //   blob.close()
-  // };
 
   const requestPermission = () => {
     setHasCameraPermission(cameraPermission.status === 'granted');
@@ -140,44 +91,39 @@ const CVScreen = ({ route}) => {
 
   if (video) { 
     let saveVideo = async () => {
-      // Saving video in redux
-      // userData.saveUserVideoToMemory(video.uri);
-      // const value = await AsyncStorage.setItem(
-      //   'video',
-      //   JSON.stringify(video.uri)
-      // );
-      // console.log('value', value);
+
       MediaLibrary.saveToLibraryAsync(video.uri).then(() => {
         setVideo(undefined);
       });
       // PATCH REQUEST
       sendVideo();
     };
+    
+    let formData = new FormData();
 
-    let formdata = new FormData();
-    formdata.append("video_cv", videoUri);
-    console.log('FORM DATA', formdata);
+    let fileFormat = videoUri.substring(videoUri.lastIndexOf(".") + 1);
+    let fileName = videoUri.substring(videoUri.lastIndexOf("/")+ 1);
+    
+    formData.append('video_cv', { uri: videoUri, name: fileName, type: `video/${fileFormat}` })
+
 
 
     const sendVideo = async () => {
-      console.log('sending video', uuid);
+      console.log('sending data', formData);
 
       try {
-        const response = await axios.patch(BASE_URL_VIDEOS + API_URL.USER + uuid, formdata,
+        const response = await axios.patch(BASE_URL_VIDEOS + API_URL.USER + uuid, formData,
           {
             headers: {
               Authorization: `Token ${token}`,
-              'Content-Type': 'multipart/form-data; boundary=\"--\"/',
+              'Content-Type': 'multipart/form-data',
             },
           })
         const data = response.data;
-        console.log('data', data);
+        console.log('data post request', data);
       } catch (error) {
         if (error.response) {
           console.log('Error', error);
-          console.log('response.data', error.response.data);
-          console.log('status', error.response.status);
-          console.log('headers', error.response.headers);
         }
         console.log(error.request);
       }
