@@ -110,7 +110,6 @@ const SplashScreen = ({ navigation }) => {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <Text>Cargando... {userData.token}</Text>
-
       </View>
     );
   }

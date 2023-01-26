@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import {
   API_URL, BASE_URL,
 } from '../axios/config';
-import { View, Text, StyleSheet, Image, ImageBackground, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, Image, ImageBackground } from 'react-native';
 import { PrimaryButton } from '../styles/button';
-import { LinearGradient } from 'expo-linear-gradient';
+import Context from '../../contexts/context';
+import { useContext } from 'react';
+
 
 const axios = require('axios').default;
 
@@ -12,8 +14,13 @@ const MainScreen = ({ navigation, route }) => {
   const { uuid, token }= route.params;
   const [data, setData] = useState("");
 
+   // userData from Context
+   const userData = useContext(Context);
+
   useEffect(() => {
     getUser();
+    // read from memory
+    getData();
   }, []);
 
   const getUser = async () => {
@@ -31,22 +38,17 @@ const MainScreen = ({ navigation, route }) => {
     }
   };
 
+  // Getting video Uri from memory
+  const getData = async () => {
+    userData.readFromMemory(() => {
+      if (userData.video != null){
+        console.log('video from data', userState.video);
+      }
+    });
+  }
+
 const onPress = () => {
   navigation.navigate('CV', { 
-    uuid: uuid, 
-    token: token
-   })
-};
-
-const onPressJobs= () => {
-  navigation.navigate('JobsList', { 
-    uuid: uuid, 
-    token: token
-   })
-};
-
-const onPressHome= () => {
-  navigation.navigate('Home', { 
     uuid: uuid, 
     token: token
    })

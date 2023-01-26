@@ -64,7 +64,7 @@ const HomeScreen = ({ navigation, route }) => {
   }
   function PerfilScreenF() {
     return (
-    <Main route={route} /> //Poner el layout que corresponda
+    <Main route={route} navigation={navigation}/> //Poner el layout que corresponda
     //<MyApplications />
     );
   }
