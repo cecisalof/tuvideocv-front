@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import React from "react";
-import { SafeAreaView, FlatList, StyleSheet, Text, View, Image, ActivityIndicator, Dimensions, TouchableHighlight} from "react-native";
+import { SafeAreaView, FlatList, StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndicator, ToastAndroid, Dimensions, TouchableHighlight} from "react-native";
 import Header from '../components/Header'
 import Constants from 'expo-constants'
 import { Icon } from "react-native-elements";
+import Dialog from "react-native-dialog";
 import {
   BASE_URL,
 } from '../axios/config';
@@ -21,7 +22,9 @@ const App = (props) => {
   const [lengthJobApply, setLengthJobApply]  = useState("0");
   const [dataJobFavoriteReload, setDataJobFavoriteReload] = useState("");  
   const [dataJobCandidatesReload, setDataJobCandidatesReload] = useState("");  
-
+  const [isModalVisibleOptions, setModalVisibleOptions] = useState(false);
+  const [itemUUID, setItemUUID] = useState("item");
+  const [varFirstTime, setVarFirstTime] = useState("0");
   useEffect(() => {
       getJobFavorites(token)
       getJobCandidates(token)
@@ -34,8 +37,10 @@ const App = (props) => {
       }
 
   }, [masterDataSource]);
+  useEffect(() => { 
+  }, [itemUUID]);
 
-  const getJobFavorites = async (token) => {
+  const getJobFavorites = async (token, refresh) => {
     try{
       const response = await axios.get(BASE_URL + "favorites",
         {
@@ -44,12 +49,17 @@ const App = (props) => {
           }
         })
         const data = response.data;
-        setDataJobFavoriteReload(data.results);
+        if (refresh == "refresh"){ //Si tiene la orden de refresh, directamente se mete en setMaster
+          setMasterDataSource(data.results);
+          setLengthJobFavorite(data.results.length)
+        } else {
+          setDataJobFavoriteReload(data.results);
+        }
     } catch (error){
       console.log("Error del favorites", error);
     }
   };
-  const getJobCandidates = async (token) => {
+  const getJobCandidates = async (token, refresh) => {
     try{
       const response = await axios.get(BASE_URL + "candidates",
         {
@@ -58,19 +68,75 @@ const App = (props) => {
           }
         })
         const data = response.data;
-        setDataJobCandidatesReload(data.results);
-        if (masterDataSource.length==0){
+        if (refresh == "refresh"){ //Si tiene la orden de refresh, directamente se mete en setMaster
+          setMasterDataSource(data.results); 
+          setLengthJobFavorite(Object.keys(masterDataSource).length)
+          setLengthJobApply(data.results.length)
+        } else {
+          setDataJobCandidatesReload(data.results);
+        }
+
+        if ((masterDataSource.length==0 && varFirstTime ==0)){
+          setVarFirstTime(1);
           setMasterDataSource(data.results);
         }
     } catch (error){
       console.log("Error del apply", error);
     }
   };
+  const deleteJob = async () => {
+    if (lado == 0){
+      const response = await axios.delete(BASE_URL + "candidates/"+itemUUID+"/delete", //Hay que cambiarlo por el delete
+      {
+        headers: {
+          'Authorization': `token ${token}`
+        }
+      }).then(function (response) {
+        const data = response.data;
+        ToastAndroid.show("¡Eliminado correctamente!", ToastAndroid.SHORT);
+      })
+      .catch(function (error) {
+        console.log("Error del delete", error);
+        ToastAndroid.show("Ha sucedido un error", ToastAndroid.SHORT);
+      });
+    } else if (lado == 1) {
+      const response = await axios.delete(BASE_URL + "favorites/"+itemUUID+"/delete", //Hay que cambiarlo por el delete
+      {
+        headers: {
+          'Authorization': `token ${token}`
+        }
+      }).then(function (response) {
+        const data = response.data;
+        ToastAndroid.show("¡Eliminado correctamente!", ToastAndroid.SHORT);
+      })
+      .catch(function (error) {
+        console.log("Error del delete", error);
+        ToastAndroid.show("Ha sucedido un error", ToastAndroid.SHORT);
+      });
+    }
+};
+  const toggleModalOptionsUUID = (uuid) => {
+    setItemUUID(uuid);
+    setModalVisibleOptions(!isModalVisibleOptions);
+  };
+  const ocultarDialogo = () => {
+    setModalVisibleOptions(!isModalVisibleOptions);
+  }
+  const handleDelete = () => {
+    // The user has pressed the "Delete" button, so here you can do your own logic.
+    // ...Your logic
+    deleteJob(itemUUID);
+    if (lado == 1) { //Refrescar la pantalla 
+      getJobFavorites(token, "refresh");
+    } else if (lado == 0){
+      getJobCandidates(token, "refresh");
+    }
+    ocultarDialogo();
+  };
   const myListEmpty = () => {
     return (
       <View style={{ alignItems: "center" }}>
-        <Text style={styles.item}>Loading</Text>
-        <ActivityIndicator size="large" color="#8325EC" />
+        <Text style={styles.item}>No hay trabajos optados a candidatura</Text>
       </View>
     );
   };
@@ -101,6 +167,14 @@ const App = (props) => {
       <Image source={lado==0 ? require('../assets/icons/rsz_barra-derecha.png') : require('../assets/icons/rsz_barra-izquierda.png')}/>
     </View>
   <SafeAreaView style={styles.containerList}>
+  <Dialog.Container visible={isModalVisibleOptions}>
+      <Dialog.Title>Eliminación de trabajo</Dialog.Title>
+      <Dialog.Description>
+        ¿Estás seguro de que quieres eliminar del listado este trabajo?.
+      </Dialog.Description>
+      <Dialog.Button label="Cancel" onPress={ocultarDialogo}/>
+      <Dialog.Button label="Delete" onPress={handleDelete}/>
+    </Dialog.Container>
     <FlatList
       data={masterDataSource}
       renderItem={({ item, index }) =>
@@ -109,17 +183,31 @@ const App = (props) => {
         <Image source={lado==0 ? require('../assets/jobcandidate1.png') : require('../assets/jobfavorite.png')} style={styles.itemImage} />
         </View>
         <View>
-            <Text style={[styles.itemGeneric, styles.itemName]}>{item.title}</Text>
+            <Text style={[styles.itemGeneric, styles.itemName]}>{item.job.title}</Text>
             <View style={styles.itemLocation}>
               <Icon
                     name='place'
                     type="material-icons"
                     size={35}
                     color='#B2B2B4'/>
-              <Text style={[styles.itemGeneric, styles.itemPlace]}>{item.address}</Text>
+              <Text style={[styles.itemGeneric, styles.itemPlace]}>{item.job.address}</Text>
             </View>
-            <Text style={[styles.item, styles.itemContrato]}>{item.work_time}</Text>
+            <Text style={[styles.item, styles.itemContrato]}>{item.job.work_time}</Text>
         </View>
+        <TouchableOpacity onPress={()=>{
+                  toggleModalOptionsUUID(item.uuid);
+                  //Llamar a las opción de borrar
+                  }}
+                  //underlayColor="#DDDDDD"
+                  style={styles.itemIconOption}
+                  >
+                    <Icon
+                                    name="delete"
+                                    type="material"
+                                    size={24}
+                                    color="purple"
+                                    />
+                </TouchableOpacity>
        </View>
       }
       keyExtractor={(item, index) => index}
@@ -224,6 +312,7 @@ const styles = StyleSheet.create({
   },
   itemPlace: {
     color: "#B2B2B4",
+    width: 120,
   },
   itemImage: {
     width: 80,
