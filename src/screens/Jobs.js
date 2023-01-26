@@ -187,7 +187,7 @@ const App = (props) => {
                             name="search-web"
                             type="material-community"
                             size={45}
-                            color="grey"
+                            color="#7E7777"
                             />
             </View>
             <TextInput
@@ -209,7 +209,7 @@ const App = (props) => {
                             type="material-community"
                             underlayColor="white"
                             size={35}
-                            color="grey"
+                            color="#7E7777"
                             />
 
         </TouchableOpacity>
@@ -229,7 +229,7 @@ const App = (props) => {
     <FlatList
       data={filteredDataSource}
       renderItem={({ item, index }) =>
-      <View  key={index} style={[styles.cardGeneric, index%3==0 ? styles.cardBlue : index%3==1 ? styles.cardGreen : styles.cardPurple]}>
+      <View  key={index} style={[styles.cardGeneric, index%3==0 ? styles.cardBlue : index%3==1 ? styles.cardPurple : styles.cardPink]}>
         <View style={styles.itemImageV2}>
         <Image source={require('../assets/jobopening.png')} style={styles.itemImage} />
         </View>
@@ -240,7 +240,7 @@ const App = (props) => {
                     name='place'
                     type="material-icons"
                     size={35}
-                    color='#B2B2B4'/>
+                    color='#7E7777'/>
               <Text style={[styles.itemGeneric, styles.itemPlace]}>{item.address}</Text>
             </View>
             <Text style={[styles.item, styles.itemContrato]}>{item.work_time}</Text>
@@ -272,7 +272,7 @@ const App = (props) => {
 
       )}
       ListFooterComponent={() => (
-        <Text style={{ fontSize: 30, textAlign: "center",marginBottom:80,fontWeight:'bold' }}>Fin de ofertas</Text>
+        <Text style={{ fontSize: 20, textAlign: "center", marginBottom:40, margin: 10, fontWeight:'bold' }}>Fin de ofertas</Text>
       )}
     />
   </SafeAreaView>
@@ -307,13 +307,13 @@ const styles = StyleSheet.create({
     height: 120,
   },
   cardBlue: {
-    backgroundColor: '#b4fffe',
+    backgroundColor: '#CEFDFF',
   },
   cardPurple: {
-    backgroundColor: '#F7CBFF',
+    backgroundColor: '#DABAFF',
   },
-  cardGreen: {
-    backgroundColor: '#D4FFCB',
+  cardPink: {
+    backgroundColor: '#FFC4F7',
   },
   viewFilter:{
     flexDirection: "row",
@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
   itemGeneric: {
     marginTop: 5,
     fontSize: 15,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   itemName: {
     padding: 20,
@@ -363,7 +363,8 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   itemPlace: {
-    color: "#B2B2B4",
+    color: "#7E7777",
+    fontSize: 15,
     width: 120,
   },
   itemImage: {
