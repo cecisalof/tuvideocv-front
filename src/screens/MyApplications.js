@@ -178,7 +178,7 @@ const App = (props) => {
     <FlatList
       data={masterDataSource}
       renderItem={({ item, index }) =>
-      <View  key={index} style={[styles.cardGeneric, index%3==0 ? styles.cardBlue : index%3==1 ? styles.cardGreen : styles.cardPurple]}>
+      <View  key={index} style={[styles.cardGeneric, index%3==0 ? styles.cardBlue : index%3==1 ? styles.cardPink : styles.cardPurple]}>
         <View style={styles.itemImageV2}>
         <Image source={lado==0 ? require('../assets/jobcandidate1.png') : require('../assets/jobfavorite.png')} style={styles.itemImage} />
         </View>
@@ -189,7 +189,7 @@ const App = (props) => {
                     name='place'
                     type="material-icons"
                     size={35}
-                    color='#B2B2B4'/>
+                    color='#7E7777'/>
               <Text style={[styles.itemGeneric, styles.itemPlace]}>{item.job.address}</Text>
             </View>
             <Text style={[styles.item, styles.itemContrato]}>{item.job.work_time}</Text>
@@ -255,13 +255,13 @@ const styles = StyleSheet.create({
     height: 120,
   },
   cardBlue: {
-    backgroundColor: '#b4fffe',
+    backgroundColor: '#CEFDFF',
   },
   cardPurple: {
-    backgroundColor: '#F7CBFF',
+    backgroundColor: '#DABAFF',
   },
-  cardGreen: {
-    backgroundColor: '#D4FFCB',
+  cardPink: {
+    backgroundColor: '#FFC4F7',
   },
   viewFilter:{
     flexDirection: "row",
@@ -311,7 +311,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   itemPlace: {
-    color: "#B2B2B4",
+    color: "#7E7777",
     width: 120,
   },
   itemImage: {
