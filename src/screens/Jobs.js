@@ -5,8 +5,8 @@ import Header from '../components/Header'
 import Constants from 'expo-constants'
 import { Icon } from "react-native-elements";
 import Modal from "react-native-modal";
-import DefaultModalContent from '../components/DefaultModalContent';
-import DefaultModalContentOptions from '../components/DefaultModalContentOptions';
+import DefaultModalContent from '../components/DefaultModalContentFiltroJobs';
+import DefaultModalContentOptions from '../components/DefaultModalContentOptarJobs';
 import {
   BASE_URL,
 } from '../axios/config';
@@ -23,8 +23,9 @@ const App = (props) => {
   const [modalVarTipoJornada, setModalVarTipoJornada]  = useState("");
   const [modalVarMadrid, setModalVarMadrid]  = useState(false);
   const [itemSelectedModalOptions, setItemSelectedModalOptions] = useState("Nothing");
-  const [itemSelectedChanged, setItemSelectedChanged] = useState("false");
   const [itemUUID, setItemUUID] = useState("item");
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalVisibleOptions, setModalVisibleOptions] = useState(false);
   //const [idJob, setIdJob] = useState("Nothing");
   useEffect(() => {
     if (data) {
@@ -117,7 +118,7 @@ const App = (props) => {
           ? item.work_time.toUpperCase()
           : ''.toUpperCase();
           textData = modalVarTipoJornada.toUpperCase();
-        } else if (text == "Madrid"){ //Deberiamos comprobar si Madrid es true o false para poder limpiar o no la busqueda TODO: ADRI // DEBERIA UNIFICARLO TODO EN UN SOLO FUNCTION PARA QUE FUNCIONE CORRECTAMENTE
+        } else if (text == "Madrid"){ 
           itemData = item.address
           ? item.address.toUpperCase()
           : ''.toUpperCase();
@@ -128,8 +129,7 @@ const App = (props) => {
       setStateFounded(newData.length);
       setFilteredDataSource(newData);
   };
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [isModalVisibleOptions, setModalVisibleOptions] = useState(false);
+
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible); 
@@ -140,7 +140,6 @@ const App = (props) => {
   };
   const toggleModalOptionsPressed = (childData) => {
     setModalVisibleOptions(!isModalVisibleOptions);
-    setItemSelectedChanged(true);
     setItemSelectedModalOptions(childData);
     if (childData == "Favorite"){ 
       addFavorite();
